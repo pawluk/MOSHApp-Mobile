@@ -1,0 +1,79 @@
+	<div data-role="page" id="page-register" data-theme="b">
+			<div data-role="header" data-theme="a">
+			<h1>
+				MoshApp : <span>Register</span>
+			</h1>
+		</div>
+		<div class="content">
+		<div id="register" data-content-theme="b">
+			<form id="registerfrm" >
+			<div data-role="fieldcontain">
+		         <label for="nname">Nick Name:</label>
+		         <input type="text" name="nname" id="nname" data-clear-btn="true"/ />
+				</div>
+				<div data-role="fieldcontain">
+		         <label for="fname">First Name:</label>
+		         <input type="text" name="fname" id="fname" data-clear-btn="true"/ />
+				</div>
+				<div data-role="fieldcontain">
+		         <label for="lname">Last Name:</label>
+		         <input type="text" name="lname" id="lname" data-clear-btn="true"/ />
+				</div>
+				<div data-role="fieldcontain">
+		         <label for="snum">Student ID:</label>
+		         <input type="text" name="snum" id="snum" data-clear-btn="true"/ />
+				</div>
+				<div data-role="fieldcontain">
+		         <label for="email">Email:</label>
+		         <input type="text" name="email" id="email" data-clear-btn="true"/ />
+				</div>
+				<div data-role="fieldcontain">
+		         <label for="verifyemail">Confirm Email:</label>
+		         <input type="text" name="verifyemail" id="verifyemail" data-clear-btn="true"/ />
+				</div>
+				<div data-role="fieldcontain">
+		         <label for="password">Password:</label>
+		         <input type="text" name="password" id="password" data-clear-btn="true"/ />
+				</div>
+				<div data-role="fieldcontain">
+		         <label for="verifypass">Confirm Password:</label>
+		         <input type="text" name="verifypass" id="verifypass" data-clear-btn="true"/ />
+				</div>
+				<div data-role="fieldcontain">
+		         <label for="phone">Phone:</label>
+		         <input type="text" name="phone" id="phone" data-clear-btn="true"/ />
+				</div>
+				<div data-role="fieldcontain">
+					<fieldset data-role="controlgroup">
+						<legend>Team-mates can see my password:</legend>
+						<input type="checkbox" name="pvsbuser" id="pvsbuser" class="custom" />
+						<label for="pvsbuser">I agree</label>
+					</fieldset>
+				</div>
+				<div data-role="fieldcontain">
+					<fieldset data-role="controlgroup">
+					   <legend>Team-mates can see my email:</legend>
+					   <input type="checkbox" name="evsbuser" id="evsbuser" class="custom" />
+					   <label for="evsbuser">I agree</label>
+					</fieldset>
+				</div>
+				<div class="ui-body ui-body-b">
+					<fieldset class="ui-grid-a">
+							<div class="ui-block-a"><button type="reset" data-theme="d" >Clear</button></div>
+							<div class="ui-block-b"><button type="submit" data-theme="a" >Submit</button></div>
+					</fieldset>
+				</div>
+			</form>
+			</div>
+		</div>
+		<!-- /content -->
+		<div data-role="footer" data-theme="a" data-position="fixed">
+		<div data-role="navbar">
+				<ul>
+					<li><a data-rel="back" data-icon="back" data-role="button">Back</a></li>
+				</ul>
+			</div>
+		</div>
+		<!--footer-->
+	</div>
+	<!-- /page-register -->
