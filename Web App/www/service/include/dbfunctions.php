@@ -37,7 +37,7 @@ class DB_Functions {
     }
 	//old version Select t.t_id,t.t_name,(Select Sum(currenttime) From progress p where p.t_id=t.t_id) time_spent FROM teams t Order by time_spent
 	public function getTeams(){
-		$result = mysql_query('Select t.t_id,t.t_name,(Select count(pc.tsk_id) FROM progress pc WHERE pc.u_id=pf.u_id AND pc.t_id=pf.t_id AND pc.status=2) solved ,TIME_TO_SEC(TIMEDIFF(pf.currenttime,(Select ps.currenttime from progress ps Where ps.u_id= pf.u_id AND ps.tsk_id=pf.tsk_id AND ps.status=1))) time_spent FROM teams t LEFT OUTER JOIN progress pf ON pf.status=2 AND pf.t_id=t.t_id Order By solved,time_spent');
+		$result = mysql_query('Select t.t_id,t.t_name,(Select count(pc.tsk_id) FROM progress pc WHERE pc.u_id=pf.u_id AND pc.t_id=pf.t_id AND pc.status=2) solved ,TIME_TO_SEC(TIMEDIFF(pf.currenttime,(Select ps.currenttime from progress ps Where ps.u_id= pf.u_id AND ps.tsk_id=pf.tsk_id AND ps.status=1))) time_spent FROM teams t LEFT OUTER JOIN progress pf ON pf.status=2 AND pf.t_id=t.t_id Order By t.t_name,solved,time_spent');
 		$no_of_rows = mysql_num_rows($result);
 		if($no_of_rows>0)
 			return $result;

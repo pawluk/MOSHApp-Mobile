@@ -7,14 +7,7 @@ var servicelink1="service/dbservice.php";
 document.addEventListener("offline", function(){ isconnected=false; }, false);
 document.addEventListener("online", function(){ isconnected=true; }, false);
 document.addEventListener("deviceready", DeviceReady, false);
-
-//dont needed for mobile
-$(document).ready(function(){
-DeviceReady();
-});
-
-
-function DeviceReady(){
+window.addEventListener("load", function() { 
 //get device
 var ua = navigator.userAgent;
 var checker = {
@@ -26,21 +19,35 @@ var checker = {
 if (checker.iphone){
        window.top.scrollTo(0, 1);
 }
+
+});
+
+//dont needed for mobile
+$(document).ready(function(){
+DeviceReady();
+});
+
+
+function DeviceReady(){
 //this function under db.js checks localstorage and if user logged in sends him to main page instead of login page
 isloggedin();
 }
 
+//if a user who hasn't logged in trys to go another page don't let him to see that page.
 function isCheater(){
 if(!window.localStorage.getItem("sid"))
 $.mobile.changePage( "#page-main");
 }
 
+//if user didn't select task but trys to change address and want to go question page directly don't allow him.
 function isTaskSelected(){
 if(!window.localStorage.getItem("taskid"))
 $.mobile.changePage( "#page-main");
 }
+
 var refreshIntervalId="";
 $('#page-chat').live('pageinit',function(){
+			//instancitae chat class
 			 var chat =  new Chat();
     		 chat.getState();
 			$('#sendmsg').click(function(){
@@ -49,7 +56,11 @@ $('#page-chat').live('pageinit',function(){
 				$('#txtmsg').val('');
 				}
 			}); 
-}).live('pageshow',function(){refreshIntervalId= setInterval(updateChat, 2500);}).live('pagehide',function(){
+}).live('pageshow',function(){
+//when user opens this page, set interval and update chat every 2.5 sec.
+refreshIntervalId= setInterval(updateChat, 2500);
+}).live('pagehide',function(){
+//when user changes page clear interval and chat screen. like users logout from chat.
 clearInterval(refreshIntervalId);
 $('#chatscreen').empty();
 });
@@ -113,13 +124,18 @@ fadingMsg("You have not registered any game, Please contact with admin");
 });
 }).live('pageshow',function(event){
 	if(window.localStorage.getItem("reload")){
-	//after accepting task and finisihing task, this call is made for refreshing info on main page
-		if(window.localStorage.getItem("taskid")){
-		window.localStorage.removeItem("reload");
-		window.location.reload(true);
+		if(window.localStorage.getItem("sid")){
+			//after accepting task and finisihing task, this call is made for refreshing info on main page
+				if(window.localStorage.getItem("taskid")){
+				window.localStorage.removeItem("reload");
+				window.location.reload(true);
+				}else{
+				$('#mainnavbar').hide();
+				confirmDialog("Congratz","You have solved all question on this task, Now you can go and select another task.","#page-main");
+				}
 		}else{
-		$('#mainnavbar').hide();
-		confirmDialog("Congratz","You have solved all question on this task, Now you can go and select another task.","#page-main");
+			window.localStorage.removeItem("reload");
+			window.location.reload(true);
 		}
 	}else if(window.localStorage.getItem("gamfinished")){
 		window.localStorage.removeItem("gamfinished");
@@ -175,9 +191,8 @@ var emailsw = $("#flip-email");
 			$('div[id="page-main"] > div[data-role="footer"]').addClass('hidden');
 			$('#mainmenu').addClass('hidden');
 			$('#login').removeClass('hidden');
-			history.back();
-			//$.mobile.changePage( "#page-main", { reloadPage:true } );
-			//location.reload(true);
+			window.localStorage.setItem("reload","true");
+			$.mobile.changePage( "#page-main");
 			}
 	});
 if(window.localStorage.getItem('sid')==null){
@@ -294,6 +309,7 @@ function gomain(){
 	//starts timer for game 
 	startTimer();
 	$('div[id="page-main"] > div[data-role="footer"]').removeClass('hidden');
+	ShowUserInfo();
 	$('#mainmenu').removeClass('hidden');
 }
 
@@ -743,8 +759,6 @@ isTaskSelected();
 			$('<source id="typeacc" src="http://moshapp.kaldim.com/pages/accs/'+audname+'.m4a"><source id="typeogg" src="http://moshapp.kaldim.com/pages/ogg/'+audname+'.ogg"><source id="typemp3" src="http://moshapp.kaldim.com/pages/mp3s/'+audname+'.mp3"><source id="typewav" src="http://moshapp.kaldim.com/pages/wavs/'+audname+'.wav">').appendTo('#moshplayer');
 	var slider = new Swipe(document.getElementById('imgslider'), {
 	      callback: function(e, pos) {
-	    	  //will added for native version
-			  //stopAudio();
 	        var i = bullets.length;
 	        while (i--) {
 	          bullets[i].className = ' ';
@@ -759,22 +773,16 @@ isTaskSelected();
 			$('#typemp3').attr('src','http://moshapp.kaldim.com/pages/mp3s/'+audname+'.mp3');
 			$('#typeogg').attr('src','http://moshapp.kaldim.com/pages/ogg/'+audname+'.ogg');
 			$('#typewav').attr('src','http://moshapp.kaldim.com/pages/ogg/'+audname+'.wav');
-			$('#moshplayer')[0].load();
-			$('#play .ui-btn-text').html('Play');
-			$('#play .ui-icon').addClass('ui-icon-audio-play').removeClass('ui-icon-audio-pause');
-	      }
+			$('#stop').trigger('click');
+			}
 	    }),
 	    bullets = document.getElementById('position').getElementsByTagName('em');
 	
 	$('#prev').click(function(){
-		//will added for native version
-		//stopAudio();
 		slider.prev();return false;
 	});
 	
 	$('#next').click(function(){
-		//will added for native version
-		//stopAudio();
 		slider.next();return false;
 	});
 
@@ -789,8 +797,6 @@ isTaskSelected();
 	var stop_btn = $('#stop');
 
 	play_btn.click(function(){
-		//will added for native version
-		//playAudio(audname);
 		if($('#play .ui-btn-text').html()=='Play'){
 		$('#moshplayer')[0].play();
 		$('#slider').attr( 'max', Math.round($('#moshplayer')[0].duration));
@@ -802,20 +808,14 @@ isTaskSelected();
 		$('#play .ui-btn-text').html('Play');
 		$('#play .ui-icon').addClass('ui-icon-audio-play').removeClass('ui-icon-audio-pause');
 		}
-		// $(this).button('disable');
 	});
 	
 	stop_btn.click(function(){
-		//if(playing){
-		//will added for native version
-		//stopAudio();  
-		// reset slider
 		$('#moshplayer')[0].load();
 		$('#play .ui-btn-text').html('Play');
 		$('#play .ui-icon').addClass('ui-icon-audio-play').removeClass('ui-icon-audio-pause');
-		//$('#slider').val(0);
-		//$('#slider').slider('refresh');
-		//}
+		$('#slider').val(0);
+		$('#slider').slider('refresh');
 	});
 
 	
@@ -824,9 +824,6 @@ isTaskSelected();
 slider="";
 $('#imgul').empty();
 $('#position').empty();
-	// if(playing){
-		// stopAudio();
-	// }
 });
 
 
