@@ -7,7 +7,7 @@ var servicelink1="service/dbservice.php";
 document.addEventListener("offline", function(){ isconnected=false; }, false);
 document.addEventListener("online", function(){ isconnected=true; }, false);
 document.addEventListener("deviceready", DeviceReady, false);
-window.addEventListener("load", function() { 
+window.addEventListener("load", function() {
 //get device
 var ua = navigator.userAgent;
 var checker = {
@@ -48,14 +48,14 @@ $.mobile.changePage( "#page-main");
 var refreshIntervalId="";
 $('#page-chat').live('pageinit',function(){
 			//instancitae chat class
-			 var chat =  new Chat();
-    		 chat.getState();
+			var chat =  new Chat();
+			chat.getState();
 			$('#sendmsg').click(function(){
-				if($('#txtmsg').val()!=""){
-				chat.send($('#txtmsg').val(), window.localStorage.getItem("nickname"));	
+				if($('#txtmsg').val()!==""){
+				chat.send($('#txtmsg').val(), window.localStorage.getItem("nickname"));
 				$('#txtmsg').val('');
 				}
-			}); 
+			});
 }).live('pageshow',function(){
 //when user opens this page, set interval and update chat every 2.5 sec.
 refreshIntervalId= setInterval(updateChat, 2500);
@@ -67,7 +67,7 @@ $('#chatscreen').empty();
 
 
 $('#page-main').live('pageinit',function(){
-	
+
 	//this two button hides and show second menu on navbar
 $('#smallmenuhide').click(function(){
 $('#choisetohide').slideUp('fast');
@@ -184,7 +184,7 @@ $('.username').html('Not Logged In');
 var phonesw = $("#flip-phone");
 var emailsw = $("#flip-email");
 	$('#logout').click(function() {
-			if(window.localStorage.getItem('sid')==null){
+			if(window.localStorage.getItem('sid')===null){
 			fadingMsg("You didnot log in yet.");
 			}else{
 					window.localStorage.clear();
@@ -195,13 +195,13 @@ var emailsw = $("#flip-email");
 			$.mobile.changePage( "#page-main");
 			}
 	});
-if(window.localStorage.getItem('sid')==null){
+if(window.localStorage.getItem('sid')===null){
 phonesw.slider('disable');
 emailsw.slider('disable');
 }else{
 phonesw.slider('enable');
 emailsw.slider('enable');
-//position user option 
+//position user option
 phonesw[0].selectedIndex =window.localStorage.getItem("phoneoption");
 $(phonesw).trigger('change');
 emailsw[0].selectedIndex =window.localStorage.getItem("emailoption");
@@ -238,19 +238,19 @@ $('#login_password').keypress(function(e) {
     if(e.which == 13) {
       $("#login_submit").trigger('click');
     }
-})
+});
 
 $("#login_submit").click(function(event) {
         event.preventDefault();
 		//retrieve information from the form
        var credentials = { userName: $('#login_username').val(), password: $('#login_password').val() };
-	   
-	   //check if they are null
-       if(credentials.userName=="" || credentials.password ==""){
+
+		//check if they are null
+       if(credentials.userName==="" || credentials.password ===""){
        fadingMsg("Please fill the information before submitting");
        }else {
-	   //ask server if user exist
-		 $.ajax({
+		//ask server if user exist
+		$.ajax({
 			async: "false",
 			type: "POST",
 			url: servicelink1,
@@ -259,17 +259,17 @@ $("#login_submit").click(function(event) {
 			var x = $.parseJSON(data);
 			if(x.success==1){
 			//if loginned user have nick name then save their info
-			if(x.u_nickname!=null && x.u_nickname!=""){
+			if(x.u_nickname!==null && x.u_nickname!==""){
 				saveuser(x.u_id,credentials.userName);
 			}else{
 					// nickname will be asked here
 			}
 			}else{
 				fadingMsg("Username/password does not match. Please try again.");
-       		}
-			
+			}
+
 			},//on complation of login ask for all user info, such as team name, game id, and if they have task accepted already that info
-			complete: function(data){ 
+			complete: function(data){
 			if(window.localStorage.getItem("sid")){
 				$.ajax({
 				async: "false",
@@ -306,7 +306,7 @@ function gomain(){
 	$('#login').addClass('hidden');
 	$('#login_username').val('');
 	$('#login_password').val('');
-	//starts timer for game 
+	//starts timer for game
 	startTimer();
 	$('div[id="page-main"] > div[data-role="footer"]').removeClass('hidden');
 	ShowUserInfo();
@@ -321,7 +321,7 @@ function startTimer(){
 		if(gmfinish!="undefined"){
 				timedif = (new Date()).getTime() +((new Date(gmfinish.replace(" ","T")+"+00:00")).getTime() - (new Date()).getTime());
 			}
-		$('#counter').empty();	
+		$('#counter').empty();
 		$('#counter').countdown({
 				timestamp : timedif
 		});
@@ -350,10 +350,10 @@ isTaskSelected();
 	//binds enter button with get_question buttons click event
 $('#questionid').keypress(function(e) {
     if(e.which == 13) {
-	  $('#get_question').trigger('click');
+		$('#get_question').trigger('click');
     }
 });
-	
+
 	$('#get_question').click(function() {
 		if(window.localStorage.getItem("tasksecret").toLowerCase() == $('#questionid').val().toLowerCase()){
 			//saves secret on localstorage for further use.
@@ -365,7 +365,7 @@ $('#questionid').keypress(function(e) {
 	});
 });
 
-//this page show user all questions in slide view and let's users to answer 
+//this page show user all questions in slide view and let's users to answer
 $('#page-questionanswer').live('pageshow',function(){
 isCheater();
 isTaskSelected();
@@ -375,7 +375,7 @@ confirmDialog("Task","Please enter Key or scan QR Code","#page-scananswer");
 //binds enter button with answer_btn buttons click event
 $('#singleanswer').keypress(function(e) {
     if(e.which == 13) {
-	  $('#answer_btn').trigger('click');
+		$('#answer_btn').trigger('click');
     }
 });
 
@@ -400,17 +400,17 @@ $('#menuhide').show('fast');
 				$('#taskquestions').append('<li style="display:block"><div class="questiondiv"><span>Question : '+(i+1)+'</span><br/><br/>'+question+'</div></li>');
 				else
 				$('#taskquestions').append('<li style="display:none"><div class="questiondiv"><span>Question : '+(i+1)+'</span><br/><br/>'+question+'</div></li>');
-				
+
 			}
 			changeContent(0);
 			var questiontype=window.localStorage.getItem(("questiontype0"));
-			var questionid=window.localStorage.getItem(("questionid0"));	
-			var locationofquestion=0;			
+			var questionid=window.localStorage.getItem(("questionid0"));
+			var locationofquestion=0;
 				var slider1 = new Swipe(document.getElementById('imgslider1'), {
-						  callback: function(e, pos) {
+						callback: function(e, pos) {
 							var i = bullets.length;
 							while (i--) {
-							  bullets[i].className = ' ';
+								bullets[i].className = ' ';
 							}
 							bullets[pos].className = 'on';
 							//hide options and empty multichoice
@@ -422,26 +422,26 @@ $('#menuhide').show('fast');
 							questiontype=window.localStorage.getItem(("questiontype"+pos));
 							questionid=window.localStorage.getItem(("questionid"+pos));
 							locationofquestion=pos;
-						  }
+							}
 						}),
-						  bullets = document.getElementById('qposition').getElementsByTagName('em');
-					
+						bullets = document.getElementById('qposition').getElementsByTagName('em');
+
 					$('#qprev').click(function(){
 						slider1.prev();return false;
 					});
-					
+
 					$('#qnext').click(function(){
 						slider1.next();return false;
 					});
-					
-	for(var i=0;i<numberofimages;i++){
+
+	for(i=0;i<numberofimages;i++){
 		if(i===0)
 			$('#qposition').append('<em class="on">&bull;</em>');
 		else
 			$('#qposition').append('<em>&bull;</em>');
-	}		
-										
-										
+	}
+
+
 		$('#answer_btn').click(function(){
 		var choice=$("#multichoiceq input[type='radio']:checked").val();
 		var ans=$('#singleans').val();
@@ -458,7 +458,7 @@ $('#menuhide').show('fast');
 		}
 			});
 
-					
+
 }).live('pagehide',function(){
 slider1="";
 $('#taskquestions').empty();
@@ -471,8 +471,8 @@ function changeContent(pos){
 			var solved="notsolved";
 			if(window.localStorage.getItem(("questionstatus"+pos))==1)
 			solved="solved";
-		 if(window.localStorage.getItem(("questiontype"+pos))==2)
-		{		
+		if(window.localStorage.getItem(("questiontype"+pos))==2)
+		{
 			var aa=result.split("~&~");
 			var question=aa[0];
 			var options=aa[1].split("~");
@@ -485,10 +485,10 @@ function changeContent(pos){
 			$("#radio-choice-"+i).checkboxradio().checkboxradio("refresh");
 			}
 				$("fieldset#multichoiceq").controlgroup("refresh");
-			$('#questiontype').html('Multichoice').css('color','blue');	
+			$('#questiontype').html('Multichoice').css('color','blue');
 			$('#multichoice').removeClass('hidden');
-			
-			if(solved=="solved"){			
+
+			if(solved=="solved"){
 			$("fieldset#multichoiceq input[type='radio']").checkboxradio('disable');
 			}else{
 			$("fieldset#multichoiceq input[type='radio']").checkboxradio('enable');
@@ -527,8 +527,8 @@ function answerQuestion(answer,questionid,locationofquestion){
 				}else{
 				//if question is answered and answer were correct change status of question in localstorage and save answer for it to use it later
 					$('#multichoiceq').empty();
-					window.localStorage.setItem("questionstatus"+locationofquestion,data.success);	
-					window.localStorage.setItem("questionanswer"+locationofquestion,answer);	
+					window.localStorage.setItem("questionstatus"+locationofquestion,data.success);
+					window.localStorage.setItem("questionanswer"+locationofquestion,answer);
 					changeContent(locationofquestion);
 					if(locationofquestion!=numberofimages)
 					$('#qnext').trigger('click');
@@ -545,7 +545,7 @@ function answerQuestion(answer,questionid,locationofquestion){
 }
 
 
-//when they have task accepted this page will be showed to user 
+//when they have task accepted this page will be showed to user
 $('#dialog-task').live('pageinit',function(){
 isCheater();
 isTaskSelected();
@@ -558,7 +558,7 @@ isTaskSelected();
 	$('#campusname').html(window.localStorage.getItem("campusname"));
 	$('#direction').html(window.localStorage.getItem("numberofscript") + " available");
 	$('#question').html(window.localStorage.getItem("numberofquestion"));
-	$('#solved').html(solvedtasks());	
+	$('#solved').html(solvedtasks());
 });
 
 function solvedtasks(){
@@ -576,7 +576,7 @@ $('#page-contact').live('pageshow',function(event){
 isCheater();
 getMemberList();
 
-//normally all contacts is loaded when page loaded, refresh button located incase they searched one contact and didnt want to delete all those letters they can refresh contact info and load all 
+//normally all contacts is loaded when page loaded, refresh button located incase they searched one contact and didnt want to delete all those letters they can refresh contact info and load all
 $('#memberfsh').click(function(){
 getMemberList();
 });
@@ -587,26 +587,26 @@ function getMemberList() {
 			$.post(servicelink, "tag=contact&u_id="+window.localStorage.getItem("sid")).done(function(data,textStatus, jqXHR){
 			data=$.parseJSON(data);
 				$('#memberList').empty();
-				$.each(data['contacts'], function(entryIndex, entry){	
+				$.each(data['contacts'], function(entryIndex, entry){
 					var list='<li id="list-'+entryIndex+'" data-icon="arrow-r" data-iconpos="right"></li>';
 					$('#memberList').append(list);
-					var imgs=""
+					var imgs="";
 					//if user allowed teammates can see his phone number it shows on page
-					if(entry['phone']!=0){
+					if(entry['phone']!==0){
 					imgs+='<img src="css/img/ic_action_phone_outgoing.png"><img src="css/img/ic_action_dialog.png">';
 					}
 					//if user allowed teammates can see his email it shows on page
-					if(entry['email']!=0){
+					if(entry['email']!==0){
 					imgs+=' <img src="css/img/ic_action_mail.png">';
 					}
 					var memberbtn=$('<a href="#page-memberdetail"><img src="img/pw_call.png"/><h4>'+entry['nickname']+'</h4><span class="ui-li-aside">'+imgs+'</span></a>');
-					 memberbtn.bind('click',function(){
+					memberbtn.bind('click',function(){
 						window.localStorage.setItem('cntactprm',entry['id']);
-					 });
-					 $('#list-'+entryIndex).append(memberbtn);
-		//refresh unordered list to get jquery theme for dynamically added elements		
+					});
+					$('#list-'+entryIndex).append(memberbtn);
+		//refresh unordered list to get jquery theme for dynamically added elements
 	$('#memberList').listview('refresh');
-				});			
+				});
 			});
 }
 
@@ -617,19 +617,19 @@ $.post(servicelink, "tag=contact&u_id="+window.localStorage.getItem("sid")).done
 data=$.parseJSON(data);
 $('#memberDetails').empty();
 	$.map(data['contacts'], function(obj) {
+	var html="";
     if(obj['id']=== window.localStorage.getItem('cntactprm')){
 	$('#memberDetails').append('<h1 align="center">'+obj['firstname'] + ' ' + obj['lastname']+'</h1>').listview('refresh');
-	var html="";
-	if(obj['phone']!=0){
+	if(obj['phone']!==0){
 	html+='<li><a href="tel:'+obj['phone']+'"><img src=""/><h4>Cell</h4><p>'+obj['phone']+'</p><span class="ui-li-aside"><img src="css/img/ic_action_phone_outgoing.png"></span></a></li>';
 	html+='<li><a href="sms:'+obj['phone']+'"><img src=""/><h4>SMS</h4><p>'+obj['phone']+'</p><span class="ui-li-aside"><img src="css/img/ic_action_dialog.png"></span></a></li>';
 	}
-	if(obj['email']!=0){
+	if(obj['email']!==0){
 	html+='<li><a href="mailto:'+obj['email']+'"><img src=""/><h4>E-mail</h4><p>'+obj['email']+'</p><span class="ui-li-aside"><img src="css/img/ic_action_mail.png"></span></a></li>';
 	}
 	}
- 	$('#memberDetails').append(html).listview('refresh');      
-});	
+	$('#memberDetails').append(html).listview('refresh');
+});
 });
 });
 
@@ -637,17 +637,17 @@ $('#memberDetails').empty();
 $.urlParam = function(name){
     var results = new RegExp('[\\?&]' + name + '=([^&#]*)').exec(window.location.href);
     if (!results)
-    { 
-        return 0; 
+    {
+        return 0;
     }
     return results[1] || 0;
-}
+};
 
 
 
 $('#page-tasklist').live('pageshow',function(event){
 isCheater();
-//all available tasks loaded for a user 
+//all available tasks loaded for a user
 getTaskList();
 $('#tskrfsh').click(function(){
 getTaskList();
@@ -667,7 +667,7 @@ function getTaskList() {
 		else
 		loc="#";
 			var html='<li id="tsk'+entryIndex+'"></li>';
-		$('#taskList').append(html)
+		$('#taskList').append(html);
 			var btn=$('<a href="'+loc+'"><img src="css/img/ic_action_'+entry['status']+'.png"><h4>'+entry['taskname']+'</h4><p>Required Task: '+entry['requiredtsk']+'</p></a>');
 			btn.bind('click',function(){
 				var found=false;
@@ -684,7 +684,7 @@ function getTaskList() {
 			});
 			$('#tsk'+entryIndex).append(btn);
 		$('#taskList').listview('refresh');
-		});	
+		});
 	});
 }
 
@@ -705,7 +705,7 @@ $.post(servicelink, "tag=taskdetail&t_id="+tskid).done(function(data,textStatus,
 		$('#txtaudio').html(data['numberofdic']);
 		$('#txtimages').html(data['numberofdic']);
 tskloc=new google.maps.LatLng(data['campuslat'],data['campuslng']);
-$('#task_map_canvas').gmap({ 'center': data['campuslat']+","+data['campuslng']}); 
+$('#task_map_canvas').gmap({ 'center': data['campuslat']+","+data['campuslng']});
 $('#task_map_canvas').gmap('addMarker', {'position': tskloc,animation:google.maps.Animation.DROP,'bounds': true } );
 $('#task_map_canvas').gmap('option', 'zoom', 13);
 });
@@ -758,12 +758,12 @@ isTaskSelected();
 			audname=audname.substring(0,audname.length-4);
 			$('<source id="typeacc" src="http://moshapp.kaldim.com/pages/accs/'+audname+'.m4a"><source id="typeogg" src="http://moshapp.kaldim.com/pages/ogg/'+audname+'.ogg"><source id="typemp3" src="http://moshapp.kaldim.com/pages/mp3s/'+audname+'.mp3"><source id="typewav" src="http://moshapp.kaldim.com/pages/wavs/'+audname+'.wav">').appendTo('#moshplayer');
 	var slider = new Swipe(document.getElementById('imgslider'), {
-	      callback: function(e, pos) {
-	        var i = bullets.length;
-	        while (i--) {
-	          bullets[i].className = ' ';
-	        }
-	        bullets[pos].className = 'on';
+		callback: function(e, pos) {
+			var i = bullets.length;
+			while (i--) {
+				bullets[i].className = ' ';
+			}
+			bullets[pos].className = 'on';
 			$('#audioinfo').html(window.localStorage.getItem(("audio"+pos)));
 			$('#desc').html(window.localStorage.getItem(("scripttext")+pos));
 			audname=window.localStorage.getItem(("audio"+pos));
@@ -775,18 +775,18 @@ isTaskSelected();
 			$('#typewav').attr('src','http://moshapp.kaldim.com/pages/ogg/'+audname+'.wav');
 			$('#stop').trigger('click');
 			}
-	    }),
-	    bullets = document.getElementById('position').getElementsByTagName('em');
-	
+		}),
+		bullets = document.getElementById('position').getElementsByTagName('em');
+
 	$('#prev').click(function(){
 		slider.prev();return false;
 	});
-	
+
 	$('#next').click(function(){
 		slider.next();return false;
 	});
 
-	for(var i=0;i<numberofimages;i++){
+	for(i=0;i<numberofimages;i++){
 		if(i===0)
 			$('#position').append('<em class="on">&bull;</em>');
 		else
@@ -809,7 +809,7 @@ isTaskSelected();
 		$('#play .ui-icon').addClass('ui-icon-audio-play').removeClass('ui-icon-audio-pause');
 		}
 	});
-	
+
 	stop_btn.click(function(){
 		$('#moshplayer')[0].load();
 		$('#play .ui-btn-text').html('Play');
@@ -818,8 +818,8 @@ isTaskSelected();
 		$('#slider').slider('refresh');
 	});
 
-	
-	
+
+
 }).live('pagehide', function(e){
 slider="";
 $('#imgul').empty();
@@ -851,14 +851,14 @@ data=$.parseJSON(data);
 		$.each(data['teams'], function(entryIndex, entry){
 		var html='<li id="tms'+entryIndex+'" data-icon="arrow-r" data-iconpos="right"></li>';
 		$('#teamsList').append(html);
-		var tmbtn=$('<a href="#page-teammemberdetail"><img src="img/teams.png"><h4>'+entry['tname']+'</h4><p>Time spent '+toHHMMSS(entry['time_spent'])+' sec</p><span class="ui-li-count">Rank '+(entryIndex+1)+'</span></a>');	
+		var tmbtn=$('<a href="#page-teammemberdetail"><img src="img/teams.png"><h4>'+entry['tname']+'</h4><p>Time spent '+toHHMMSS(entry['time_spent'])+' sec</p><span class="ui-li-count">Rank '+(entryIndex+1)+'</span></a>');
 		tmbtn.bind('click',function(){
 			window.localStorage.setItem('tmsprm',entry['id']);
 		});
 		$('#tms'+entryIndex).append(tmbtn);
 $('#teamsList').listview('refresh');
-		
-		});	
+
+		});
 	});
 
 }
@@ -872,19 +872,19 @@ data=$.parseJSON(data);
 		$.each(data['teammembers'], function(entryIndex, entry){
 			var html='<li id="mmbs'+entryIndex+'" data-icon="arrow-r" data-iconpos="right"></li>';
 			$('#teamMembers').append(html);
-			var mmberbtn=$('<a href="#page-usertaskdetail?id='+entry['id']+'"><img src="css/img/ic_action_user.png"><h4>'+entry['nickname']+'</h4><p>Time spent '+toHHMMSS(entry['time_spent'])+' sec</p></a>');	
+			var mmberbtn=$('<a href="#page-usertaskdetail?id='+entry['id']+'"><img src="css/img/ic_action_user.png"><h4>'+entry['nickname']+'</h4><p>Time spent '+toHHMMSS(entry['time_spent'])+' sec</p></a>');
 			mmberbtn.bind('click',function(){
 				window.localStorage.setItem('tmsmmbrprm',entry['id']);
 			});
 			$('#mmbs'+entryIndex).append(mmberbtn);
 $('#teamMembers').listview('refresh');
-		
-		});	
+
+		});
 	});
-	
+
 });
 
-//leaderboard on selection of team member this page is loaded and shows selected users progress, task list and if they have done any task 
+//leaderboard on selection of team member this page is loaded and shows selected users progress, task list and if they have done any task
 $('#page-usertaskdetail').live('pageshow',function(event){
 $.post(servicelink, "tag=teammemberdetails&u_id="+window.localStorage.getItem('tmsmmbrprm')).done(function(data,textStatus, jqXHR){
 data=$.parseJSON(data);
@@ -894,14 +894,14 @@ data=$.parseJSON(data);
 		$.each(data['tasks'], function(entryIndex, entry){
 			var html='<li><a href="#"><img src="css/img/ic_action_'+entry['taskstatus']+'.png"><h4>'+entry['taskname']+'</h4><p>Time spent '+toHHMMSS(entry['time_spent'])+' sec</p></a></li>';
 $('#userDetails').append(html).listview('refresh');
-		
-		});	
+
+		});
 	});
-	
+
 });
 
-function toHHMMSS(seconds) {
-    var sec_numb    = parseInt(seconds);
+function toHHMMSS(sec) {
+    var sec_numb    = parseInt(sec, 10);
     var hours   = Math.floor(sec_numb / 3600);
     var minutes = Math.floor((sec_numb - (hours * 3600)) / 60);
     var seconds = sec_numb - (hours * 3600) - (minutes * 60);
@@ -918,30 +918,27 @@ function fadingMsg(locMsg,bgcolor,textcolor,delayTime) {
 	var dtime = delayTime? delayTime : 2800;
 	var bgcl = bgcolor?bgcolor:'#bbf3db';
 	var txtcl =  textcolor?textcolor:'#FAFAFA';
-	$(
-			"<div class='ui-overlay-shadow ui-body-a ui-corner-all dkgreen' id='fading_msg'>"
-					+ locMsg + "</div>").css({
-		"position" : "absolute",			
+	$("<div class='ui-overlay-shadow ui-body-a ui-corner-all dkgreen' id='fading_msg'>" + locMsg + "</div>").css({
+		"position" : "absolute",
 		"display" : "block",
 		"z-index" : 99999999,
 		"opacity" : 0.99,
 		"color"   : txtcl,
-		"background-color" : bgcl,
+		"background-color" : bgcl
 	}).appendTo($.mobile.pageContainer).delay(dtime).fadeOut(1400);
 }
 
 //currently this function is only map page when they click show my location this overlay goes over screen and shows loading screen
 function showloading(){
-	$("<div class='ui-overlay-shadow ui-body-a ui-corner-all dkgreen' id='loading' align='center'>"
-					+ "<img src='img/ajax-loader.gif' width='100px' height='100px' title='loading' alt='loading...'/><br/>loading.." + "</div>").css({
+	$("<div class='ui-overlay-shadow ui-body-a ui-corner-all dkgreen' id='loading' align='center'>" + "<img src='img/ajax-loader.gif' width='100px' height='100px' title='loading' alt='loading...'/><br/>loading.." + "</div>").css({
 		"position" : "absolute",
-		"top"	  : "60%",
+		"top"	: "60%",
 		"width"   : "100%",
 		"display" : "block",
 		"z-index" : 99999999,
 		"opacity" : 0.99,
-		"background-color" : "#bbf3db",
-	}).appendTo($.mobile.pageContainer)
+		"background-color" : "#bbf3db"
+	}).appendTo($.mobile.pageContainer);
 }
 
 function hideloading(){
@@ -961,13 +958,13 @@ function confirmDialog(header,mesage,redirectpage,headerclose){
     buttonPrompt: mesage,
     buttons : {
       'OK': {
-        click: function () { 
+        click: function () {
 		if(redirectpage=="#page-main"){
 		window.localStorage.removeItem("reload");
 		window.location.reload(true);
 		}else{
-		  $.mobile.changePage( redirectpage, { transition: "slide"} );
-		  }
+			$.mobile.changePage( redirectpage, { transition: "slide"} );
+		}
         }
       }
     }
