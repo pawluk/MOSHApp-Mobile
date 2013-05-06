@@ -3,7 +3,7 @@ var isconnected = false;
 var servicelink = "service/dbservice.php";
 var servicelink1 = "service/dbservice.php";
 
-//onnline ofline listener works for any connection required for a page or function to work
+//online offline listener works for any connection required for a page or function to work
 document.addEventListener("offline", function() {
 	isconnected = false;
 }, false);
@@ -19,7 +19,7 @@ window.addEventListener("load", function() {
 		blackberry: ua.match(/BlackBerry/),
 		android: ua.match(/Android/)
 	};
-	//if device iphone scrool just down to status bar
+	//if device iphone scroll just down to status bar
 	if (checker.iphone) {
 		window.top.scrollTo(0, 1);
 	}
@@ -35,12 +35,12 @@ function DeviceReady() {
 	isloggedin();
 }
 
-//if a user who hasn't logged in trys to go another page don't let him to see that page.
+//if a user who hasn't logged in tries to go another page don't let him see that page.
 function isCheater() {
 	if (!window.localStorage.getItem("sid")) $.mobile.changePage("#page-main");
 }
 
-//if user didn't select task but trys to change address and want to go question page directly don't allow him.
+//if user didn't select task but tries to change address and want to go question page directly don't allow him.
 function isTaskSelected() {
 	if (!window.localStorage.getItem("taskid")) $.mobile.changePage("#page-main");
 }
@@ -97,7 +97,7 @@ $('#page-main').live('pageinit', function() {
 				reverse: false,
 				changeHash: false
 			});
-		} else fadingMsg("You have not registered any game, Please contact with admin");
+		} else fadingMsg("You are not registered in any game, please contact your administrator.");
 	});
 
 	$('#scananswer').click(function() {
@@ -118,14 +118,14 @@ $('#page-main').live('pageinit', function() {
 					});
 				}
 			} else {
-				fadingMsg("You have not chosen any task yet, Please chose a task first.");
+				fadingMsg("You have not chosen any task yet, please choose one first.");
 				$.mobile.changePage("#page-tasklist", {
 					transition: "slide",
 					reverse: false,
 					changeHash: false
 				});
 			}
-		} else fadingMsg("You have not registered any game, Please contact with admin");
+		} else fadingMsg("You are not registered in any game, please contact your administrator.");
 	});
 }).live('pageshow', function(event) {
 	if (window.localStorage.getItem("reload")) {
@@ -136,7 +136,7 @@ $('#page-main').live('pageinit', function() {
 				window.location.reload(true);
 			} else {
 				$('#mainnavbar').hide();
-				confirmDialog("Congratz", "You have solved all question on this task, Now you can go and select another task.", "#page-main");
+				confirmDialog("Congrats", "You have solved all questions on this task, now you can go and select another task.", "#page-main");
 			}
 		} else {
 			window.localStorage.removeItem("reload");
@@ -145,7 +145,7 @@ $('#page-main').live('pageinit', function() {
 	} else if (window.localStorage.getItem("gamfinished")) {
 		window.localStorage.removeItem("gamfinished");
 		$('#mainnavbar').hide();
-		confirmDialog("Congratz", "You finished all task that are assigned now you know some usefull servicess.", "#page-main");
+		confirmDialog("Congrats", "You have finished all tasks that are assigned! Now you know some useful services.", "#page-main");
 	}
 	//adds main page user info like team name and if they have task
 	ShowUserInfo();
@@ -259,7 +259,7 @@ function go() {
 
 		//check if they are null
 		if (credentials.userName === "" || credentials.password === "") {
-			fadingMsg("Please fill the information before submitting");
+			fadingMsg("Please fill in the username and password fields.");
 		} else {
 			//ask server if user exist
 			$.ajax({
@@ -277,7 +277,7 @@ function go() {
 							// nickname will be asked here
 						}
 					} else {
-						fadingMsg("Username/password does not match. Please try again.");
+						fadingMsg("Incorrect username or password. Please try again.");
 					}
 
 				}, //on complation of login ask for all user info, such as team name, game id, and if they have task accepted already that info
@@ -371,7 +371,7 @@ $('#page-scananswer').live('pageshow', function(event) {
 				transition: "slide"
 			});
 		} else {
-			$('#errormsg').html("incorrect key, Please try again!").css('color', 'red');
+			$('#errormsg').html("Incorrect key, Please try again!").css('color', 'red');
 		}
 	});
 });
@@ -721,7 +721,7 @@ $('#page-taskaccept').live('pageshow', function(event) {
 			//$.mobile.changePage( "#page-main", { transition: "slide"} );
 			$('#tskacceptnav').hide();
 			window.localStorage.setItem("reload", "true");
-			confirmDialog("info", "Now, You will be redirected to page where you can listen and read task direction.<br/><div align='center'><b>Good Luck!</b></div>", "#page-download");
+			confirmDialog("info", "Now, you will be redirected to the page where you can listen and read task directions.<br/><div align='center'><b>Good Luck!</b></div>", "#page-download");
 		});
 	});
 
@@ -737,7 +737,7 @@ $('#page-download').live('pageinit', function() {
 				transition: "slide"
 			});
 		} else {
-			confirmDialog("Task Key", "You will be redirected to page where you can either enter <b>Secret Key</b> or Scan <b>QR Code</b>", "#page-scananswer", true);
+			confirmDialog("Task Key", "You will be redirected to the page where you can either enter the <b>Secret Key</b> or scan the <b>QR Code</b>", "#page-scananswer", true);
 		}
 	});
 }).live('pageshow', function(event) {
@@ -934,16 +934,16 @@ function hideloading() {
 	$("#loading").remove();
 }
 
-function confirmDialog(header, mesage, redirectpage, headerclose) {
+function confirmDialog(header, message, redirectpage, headerclose) {
 	header = header ? header : 'Error';
-	mesage = mesage ? mesage : 'Please contact with facilitator';
+	message = message ? message : 'Please contact the facilitator.';
 	redirectpage = redirectpage ? redirectpage : '#page-main';
 	headerclose = headerclose ? headerclose : false;
 	$('<div>').simpledialog2({
 		mode: 'button',
 		headerText: header,
 		headerClose: headerclose,
-		buttonPrompt: mesage,
+		buttonPrompt: message,
 		buttons: {
 			'OK': {
 				click: function() {
