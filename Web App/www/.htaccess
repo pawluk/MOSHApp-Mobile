@@ -1,1 +1,4 @@
 ## Default .htaccess file
+
+# Enable CORS (Cross-Domain Resource Sharing)
+Header set Access-Control-Allow-Origin "*"
