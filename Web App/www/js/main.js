@@ -600,53 +600,60 @@ $('#page-contact').live('pageshow', function(event) {
 });
 
 function getMemberList() {
-	//retrieves teammates contact information with sending user id to service
-	$.post(servicelink, "tag=contact&u_id=" + window.localStorage.getItem("sid")).done(function(data, textStatus, jqXHR) {
-		data = $.parseJSON(data);
-		$('#memberList').empty();
-		$.each(data['contacts'], function(entryIndex, entry) {
-			var list = '<li id="list-' + entryIndex + '" data-icon="arrow-r" data-iconpos="right"></li>';
-			$('#memberList').append(list);
-			var imgs = "";
-			//if user allowed teammates can see his phone number it shows on page
-			if (entry['phone'] !== 0) {
-				imgs += '<img src="css/img/ic_action_phone_outgoing.png"><img src="css/img/ic_action_dialog.png">';
-			}
-			//if user allowed teammates can see his email it shows on page
-			if (entry['email'] !== 0) {
-				imgs += ' <img src="css/img/ic_action_mail.png">';
-			}
-			var memberbtn = $('<a href="#page-memberdetail"><img src="img/pw_call.png"/><h4>' + entry['nickname'] + '</h4><span class="ui-li-aside">' + imgs + '</span></a>');
-			memberbtn.bind('click', function() {
-				window.localStorage.setItem('cntactprm', entry['id']);
+	$.ajax({
+		type: 'GET',
+		url: servicelink2 + '/teams/contact?' + sessionQueryParams(),
+		complete: function(data) {
+			data = $.parseJSON(data.responseText);
+			$('#memberList').empty();
+			$.each(data['contacts'], function(entryIndex, entry) {
+				var list = '<li id="list-' + entryIndex + '" data-icon="arrow-r" data-iconpos="right"></li>';
+				$('#memberList').append(list);
+				var imgs = "";
+				//if user allowed teammates can see his phone number it shows on page
+				if (entry.hasOwnProperty('phone')) {
+					imgs += '<img src="css/img/ic_action_phone_outgoing.png"><img src="css/img/ic_action_dialog.png">';
+				}
+				//if user allowed teammates can see his email it shows on page
+				if (entry.hasOwnProperty('email')) {
+					imgs += ' <img src="css/img/ic_action_mail.png">';
+				}
+				var memberbtn = $('<a href="#page-memberdetail"><img src="img/pw_call.png"/><h4>' + entry['nickname'] + '</h4><span class="ui-li-aside">' + imgs + '</span></a>');
+				memberbtn.bind('click', function() {
+					window.localStorage.setItem('cntactprm', entry['id']);
+				});
+				$('#list-' + entryIndex).append(memberbtn);
+				//refresh unordered list to get jquery theme for dynamically added elements
+				$('#memberList').listview('refresh');
 			});
-			$('#list-' + entryIndex).append(memberbtn);
-			//refresh unordered list to get jquery theme for dynamically added elements
-			$('#memberList').listview('refresh');
-		});
+		}
 	});
 }
 
 $('#page-memberdetail').live('pageshow', function(event) {
 	isCheater();
-	//retrieves same information as teammates list but shows single member information
-	$.post(servicelink, "tag=contact&u_id=" + window.localStorage.getItem("sid")).done(function(data, textStatus, jqXHR) {
-		data = $.parseJSON(data);
-		$('#memberDetails').empty();
-		$.map(data['contacts'], function(obj) {
-			var html = "";
-			if (obj['id'] === window.localStorage.getItem('cntactprm')) {
-				$('#memberDetails').append('<h1 align="center">' + obj['firstname'] + ' ' + obj['lastname'] + '</h1>').listview('refresh');
-				if (obj['phone'] !== 0) {
-					html += '<li><a href="tel:' + obj['phone'] + '"><img src=""/><h4>Cell</h4><p>' + obj['phone'] + '</p><span class="ui-li-aside"><img src="css/img/ic_action_phone_outgoing.png"></span></a></li>';
-					html += '<li><a href="sms:' + obj['phone'] + '"><img src=""/><h4>SMS</h4><p>' + obj['phone'] + '</p><span class="ui-li-aside"><img src="css/img/ic_action_dialog.png"></span></a></li>';
+	$.ajax({
+		type: 'GET',
+		url: servicelink2 + '/teams/contact?' + sessionQueryParams(),
+		complete: function(data) {
+			data = $.parseJSON(data.responseText);
+			$('#memberDetails').empty();
+			$.map(data['contacts'], function(obj) {
+				console.log(obj);
+				var html = "";
+				if (obj['id'] == window.localStorage.getItem('cntactprm')) {
+					$('#memberDetails').append('<h1 align="center">' + obj['firstname'] + ' ' + obj['lastname'] + '</h1>').listview('refresh');
+					if (obj.hasOwnProperty('phone')) {
+						html += '<li><a href="tel:' + obj['phone'] + '"><img src=""/><h4>Cell</h4><p>' + obj['phone'] + '</p><span class="ui-li-aside"><img src="css/img/ic_action_phone_outgoing.png"></span></a></li>';
+						html += '<li><a href="sms:' + obj['phone'] + '"><img src=""/><h4>SMS</h4><p>' + obj['phone'] + '</p><span class="ui-li-aside"><img src="css/img/ic_action_dialog.png"></span></a></li>';
+					}
+					if (obj.hasOwnProperty('email')) {
+						html += '<li><a href="mailto:' + obj['email'] + '"><img src=""/><h4>E-mail</h4><p>' + obj['email'] + '</p><span class="ui-li-aside"><img src="css/img/ic_action_mail.png"></span></a></li>';
+					}
 				}
-				if (obj['email'] !== 0) {
-					html += '<li><a href="mailto:' + obj['email'] + '"><img src=""/><h4>E-mail</h4><p>' + obj['email'] + '</p><span class="ui-li-aside"><img src="css/img/ic_action_mail.png"></span></a></li>';
-				}
-			}
-			$('#memberDetails').append(html).listview('refresh');
-		});
+				$('#memberDetails').append(html).listview('refresh');
+			});
+		}
 	});
 });
 
