@@ -28,9 +28,9 @@ window.addEventListener("load", function() {
 	//if device iphone scroll just down to status bar
 	if (checker.iphone) {
 		window.top.scrollTo(0, 1);
-		$('#download-app,#download-app-menu').attr('href','#').html('IOS App - Not Available').show();
-	}else if(checker.android){
-		$('#download-app,#download-app-menu').attr('href','apps/MoshApp.apk').html('Download Android App').show();
+		$('#download-app,#download-app-menu').attr('href', '#').html('IOS App - Not Available').show();
+	} else if (checker.android) {
+		$('#download-app,#download-app-menu').attr('href', 'apps/MoshApp.apk').html('Download Android App').show();
 	}
 });
 
@@ -239,9 +239,9 @@ $('#dialog-devmenu').live('pageinit', function(event) {
 				phoneVisible: window.localStorage.getItem("phoneoption"),
 				emailVisible: window.localStorage.getItem("emailoption")
 			}),
-			success: function (data) {
+			success: function(data) {
 				data = $.parseJSON(data);
-				if(data.status == 1) {}
+				if (data.status == 1) {}
 			}
 		});
 	}
@@ -289,14 +289,14 @@ function go() {
 					password: credentials.password
 				},
 				success: function(data) {
-					if(data.sessionId !== undefined) {
+					if (data.sessionId !== undefined) {
 						saveSession(data.sessionId);
 						$.ajax({
 							url: servicelink2 + '/info?' + sessionQueryParams(),
 							async: false,
 							success: function(data) {
 								// If newly logged in user has a nickname, then save their info
-								if(data.user.nickname !== null && data.user.nickname !== "") {
+								if (data.user.nickname !== null && data.user.nickname !== "") {
 									saveuser(data.user.id, credentials.userName);
 								} else {
 									// username will be asked here
@@ -309,14 +309,14 @@ function go() {
 				},
 				complete: function(data) {
 					// on completion of login, ask for all user info, such as team name, game id, and if they have tasks accepted already
-					if(window.localStorage.getItem("sid")) {
+					if (window.localStorage.getItem("sid")) {
 						$.ajax({
 							async: false,
 							type: 'GET',
 							url: servicelink2 + '/init?' + sessionQueryParams(),
 							success: function(data) {
 								saveuserInfo(data.userinfo);
-								if(data.hasOwnProperty('scripts')) {
+								if (data.hasOwnProperty('scripts')) {
 									saveuserScript(data.scripts);
 									saveuserQuestions(data.questions);
 								}
@@ -775,29 +775,29 @@ $('#page-download').live('pageinit', function() {
 	isCheater();
 	isTaskSelected();
 	//initilizepage();
-	var flscreenimages=new Array();
+	var flscreenimages = [];
 	for (var i = 0; i < window.localStorage.getItem("numberofscript"); i++) {
-		if (i === 0) $('#imgul').append('<li style="display:block"><div><img id="fcz_'+i+'" class="fulldcreen_zoom" src="img/scriptimgs/thumbs/' + window.localStorage.getItem(("image" + i)) + '" width="320px" height="180px"/></div></li>');
-		else $('#imgul').append('<li style="display:none"><div><img id="fcz_'+i+'" class="fulldcreen_zoom" src="img/scriptimgs/thumbs/' + window.localStorage.getItem(("image" + i)) + '" width="320px" height="180px"/></div></li>');
-		flscreenimages.push({url:'img/scriptimgs/' + window.localStorage.getItem(("image" + i)),caption:window.localStorage.getItem(("image" + i))});
+		if (i === 0) $('#imgul').append('<li style="display:block"><div><img id="fcz_' + i + '" class="fulldcreen_zoom" src="img/scriptimgs/thumbs/' + window.localStorage.getItem(("image" + i)) + '" width="320px" height="180px"/></div></li>');
+		else $('#imgul').append('<li style="display:none"><div><img id="fcz_' + i + '" class="fulldcreen_zoom" src="img/scriptimgs/thumbs/' + window.localStorage.getItem(("image" + i)) + '" width="320px" height="180px"/></div></li>');
+		flscreenimages.push({
+			url: 'img/scriptimgs/' + window.localStorage.getItem(("image" + i)),
+			caption: window.localStorage.getItem(("image" + i))
+		});
 	}
-	(function(window, PhotoSwipe){
+	(function(window, PhotoSwipe) {
 		var options = {
-			getImageSource: function(obj){
+			getImageSource: function(obj) {
 				return obj.url;
 			},
-			getImageCaption: function(obj){
+			getImageCaption: function(obj) {
 				return obj.caption;
 			},
 			enableKeyboard: false
 		},
-		instance = PhotoSwipe.attach( 
-			flscreenimages, 
-			options 
-		);
-		jQuery('.fulldcreen_zoom').click(function(){
+		instance = PhotoSwipe.attach(flscreenimages, options);
+		jQuery('.fulldcreen_zoom').click(function() {
 			var id = $(this).attr('id').substr(4);
-			instance.show(parseInt(id));		
+			instance.show(parseInt(id, 10));
 		});
 	}(window, window.Code.PhotoSwipe));
 	$('#audioinfo').html(window.localStorage.getItem("audio0"));
