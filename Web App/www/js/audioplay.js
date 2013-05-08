@@ -35,6 +35,8 @@ function initilizepage() {
 			audname = window.localStorage.getItem(("audio" + pos));
 			audname = audname.substring(0, audname.length - 4);
 			$('#moshplayer')[0].pause();
+
+			// TODO: Replace these URLs with the actual URLs that we will use in production
 			$('#typeacc').attr('src', 'http://moshapp.kaldim.com/pages/accs/' + audname + '.m4a');
 			$('#typemp3').attr('src', 'http://moshapp.kaldim.com/pages/mp3s/' + audname + '.mp3');
 			$('#typeogg').attr('src', 'http://moshapp.kaldim.com/pages/ogg/' + audname + '.ogg');
