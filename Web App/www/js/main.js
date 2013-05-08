@@ -1,7 +1,13 @@
+////---- Config variables ----////
+
+// The Web Service URL
+var servicelink = "service/dbservice.php",
+	// For now, until the C# web service is 100% done, we will be using both the PHP service and the C#-based one
+	servicelink2 = "http://localhost:9000"; // Change this to the URL of the web service
+
+////-- End config variables --////
+
 var isconnected = false;
-//some database connection made from main and pages folder so thats why we are separating
-var servicelink = "service/dbservice.php";
-var servicelink1 = "service/dbservice.php";
 
 //online offline listener works for any connection required for a page or function to work
 document.addEventListener("offline", function() {
@@ -222,9 +228,18 @@ $('#dialog-devmenu').live('pageinit', function(event) {
 	if (window.localStorage.getItem("tempemailoption") != window.localStorage.getItem("emailoption") || window.localStorage.getItem("tempphoneoption") != window.localStorage.getItem("phoneoption")) {
 		window.localStorage.setItem("phoneoption", window.localStorage.getItem("tempphoneoption"));
 		window.localStorage.setItem("emailoption", window.localStorage.getItem("tempemailoption"));
-		$.post(servicelink, "tag=updateuseroption&u_id=" + window.localStorage.getItem("sid") + "&pstatus=" + window.localStorage.getItem("phoneoption") + "&estatus=" + window.localStorage.getItem("emailoption")).done(function(data, textStatus, jqXHR) {
-			data = $.parseJSON(data);
-			if (data.status == 1) {}
+		$.ajax({
+			url: servicelink2 + "/users/" + window.localStorage.getItem("sid") + "/options",
+			type: "post",
+			data: JSON.stringify({
+				userId: window.localStorage.getItem("sid"),
+				phoneVisible: window.localStorage.getItem("phoneoption"),
+				emailVisible: window.localStorage.getItem("emailoption")
+			}),
+			success: function (data) {
+				data = $.parseJSON(data);
+				if(data.status == 1) {}
+			}
 		});
 	}
 	//remove temporarly keeped user option data
@@ -263,42 +278,48 @@ function go() {
 		} else {
 			//ask server if user exist
 			$.ajax({
-				async: "false",
-				type: "POST",
-				url: servicelink1,
-				data: "tag=login&userName=" + credentials.userName + "&password=" + credentials.password,
+				async: false,
+				type: 'POST',
+				url: servicelink2 + '/authenticate',
+				data: {
+					userName: credentials.userName,
+					password: credentials.password
+				},
 				success: function(data) {
-					var x = $.parseJSON(data);
-					if (x.success == 1) {
-						//if loginned user have nick name then save their info
-						if (x.u_nickname !== null && x.u_nickname !== "") {
-							saveuser(x.u_id, credentials.userName);
-						} else {
-							// nickname will be asked here
-						}
+					if(data.sessionId !== undefined) {
+						saveSession(data.sessionId);
+						$.ajax({
+							url: servicelink2 + '/info?' + sessionQueryParams(),
+							async: false,
+							success: function(data) {
+								// If newly logged in user has a nickname, then save their info
+								if(data.user.nickname !== null && data.user.nickname !== "") {
+									saveuser(data.user.id, credentials.userName);
+								} else {
+									// username will be asked here
+								}
+							}
+						});
 					} else {
 						fadingMsg("Incorrect username or password. Please try again.");
 					}
-
-				}, //on complation of login ask for all user info, such as team name, game id, and if they have task accepted already that info
+				},
 				complete: function(data) {
-					if (window.localStorage.getItem("sid")) {
+					// on completion of login, ask for all user info, such as team name, game id, and if they have tasks accepted already
+					if(window.localStorage.getItem("sid")) {
 						$.ajax({
-							async: "false",
-							type: "POST",
-							url: servicelink1,
-							data: "tag=userinfo&u_id=" + window.localStorage.getItem("sid"),
+							async: false,
+							type: 'GET',
+							url: servicelink2 + '/init?' + sessionQueryParams(),
 							success: function(data) {
-								//save all information retrieved on localstorage all those save functions under db.js
-								var x = $.parseJSON(data);
-								saveuserInfo(x.userinfo);
-								if (x.hasOwnProperty('scripts')) {
-									saveuserScript(x.scripts);
-									saveuserQuestions(x.questions);
+								saveuserInfo(data.userinfo);
+								if(data.hasOwnProperty('scripts')) {
+									saveuserScript(data.scripts);
+									saveuserQuestions(data.questions);
 								}
 							},
 							complete: function(data) {
-								//after completion of all those two database calls we are checking again if user info saved and letting them go main page, this function is under db.js
+								// after completion of the two database calls, check again if the user info is saved, and let them go to the main page.
 								isloggedin();
 							},
 							error: function(data) {}

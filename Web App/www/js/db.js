@@ -7,6 +7,18 @@
 //        'VALUES (1, 459876, "Question Will be placed here!","Direction will be Placed here",43.675915,-79.410639,"Casa Loma",43.675915,-79.410639,"testimg.png","testaudio.mp3")');
 //
 
+function saveSession(sessionId) {
+	window.localStorage.setItem("sessionid", sessionId);
+}
+
+function sessionId() {
+	return window.localStorage.getItem("sessionid");
+}
+
+function sessionQueryParams() {
+	return 'sessionId=' + encodeURIComponent(sessionId());
+}
+
 function isloggedin() {
 	if (window.localStorage.getItem("sid") !== null) {
 		gomain();
