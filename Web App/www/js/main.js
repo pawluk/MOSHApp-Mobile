@@ -351,7 +351,7 @@ function startTimer() {
 		var timedif = (new Date()).getTime() + 1000;
 		var gmfinish = window.localStorage.getItem("gamefinish");
 		if (gmfinish != "undefined") {
-			timedif = (new Date()).getTime() + ((new Date(gmfinish.replace(" ", "T") + "+00:00")).getTime() - (new Date()).getTime());
+			timedif = (new Date()).getTime() + ((new Date(gmfinish + "+00:00")).getTime() - (new Date()).getTime());
 		}
 		$('#counter').empty();
 		$('#counter').countdown({
