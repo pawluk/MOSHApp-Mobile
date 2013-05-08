@@ -886,19 +886,24 @@ $('#page-teamsList').live('pageshow', function(event) {
 });
 
 function getTeamsList() {
-	$.post(servicelink, "tag=teams").done(function(data, textStatus, jqXHR) {
-		data = $.parseJSON(data);
-		$('#teamsList').empty();
-		$.each(data['teams'], function(entryIndex, entry) {
-			var html = '<li id="tms' + entryIndex + '" data-icon="arrow-r" data-iconpos="right"></li>';
-			$('#teamsList').append(html);
-			var tmbtn = $('<a href="#page-teammemberdetail"><img src="img/teams.png"><h4>' + entry['tname'] + '</h4><p>Time spent ' + toHHMMSS(entry['time_spent']) + ' sec</p><span class="ui-li-count">Rank ' + (entryIndex + 1) + '</span></a>');
-			tmbtn.bind('click', function() {
-				window.localStorage.setItem('tmsprm', entry['id']);
+	$.ajax({
+		type: 'GET',
+		url: servicelink2 + '/teams',
+		complete: function(data) {
+			data = $.parseJSON(data.responseText);
+			console.log(data);
+			$('#teamsList').empty();
+			$.each(data['teams'], function(entryIndex, entry) {
+				var html = '<li id="tms' + entryIndex + '" data-icon="arrow-r" data-iconpos="right"></li>';
+				$('#teamsList').append(html);
+				var tmbtn = $('<a href="#page-teammemberdetail"><img src="img/teams.png"><h4>' + entry['tname'] + '</h4><p>Time spent ' + toHHMMSS(entry['time_spent']) + ' sec</p><span class="ui-li-count">Rank ' + (entryIndex + 1) + '</span></a>');
+				tmbtn.bind('click', function() {
+					window.localStorage.setItem('tmsprm', entry['id']);
+				});
+				$('#tms' + entryIndex).append(tmbtn);
+				$('#teamsList').listview('refresh');
 			});
-			$('#tms' + entryIndex).append(tmbtn);
-			$('#teamsList').listview('refresh');
-		});
+		}
 	});
 }
 
