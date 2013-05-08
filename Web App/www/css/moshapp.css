@@ -254,3 +254,13 @@ position:relative;
 top:-20px;
 z-index:9999999;
 }
+
+#logo {
+	background-color:white;
+	background-image:url(../img/logo.jpg);
+	background-position:center top;
+	background-repeat:no-repeat;
+	background-size:contain;
+	height:50px;
+	width:100%;
+}
