@@ -916,15 +916,19 @@ $('#page-teammemberdetail').live('pageshow', function(event) {
 
 //leaderboard on selection of team member this page is loaded and shows selected users progress, task list and if they have done any task
 $('#page-usertaskdetail').live('pageshow', function(event) {
-	$.post(servicelink, "tag=teammemberdetails&u_id=" + window.localStorage.getItem('tmsmmbrprm')).done(function(data, textStatus, jqXHR) {
-		data = $.parseJSON(data);
-		$('#userDetails').empty();
-		$('.member-summary h1').html(data['nickname']);
-		$('#secondinfo').html(data['tname'] + ' Team Member');
-		$.each(data['tasks'], function(entryIndex, entry) {
-			var html = '<li><a href="#"><img src="css/img/ic_action_' + entry['taskstatus'] + '.png"><h4>' + entry['taskname'] + '</h4><p>Time spent ' + toHHMMSS(entry['time_spent']) + ' sec</p></a></li>';
-			$('#userDetails').append(html).listview('refresh');
-		});
+	$.ajax({
+		type: 'GET',
+		url: servicelink2 + '/users/' + window.localStorage.getItem('tmsmmbrprm') + '/taskdetails',
+		complete: function(data) {
+			data = $.parseJSON(data.responseText);
+			$('#userDetails').empty();
+			$('.member-summary h1').html(data['nickname']);
+			$('#secondinfo').html(data['tname'] + ' Team Member');
+			$.each(data['tasks'], function(entryIndex, entry) {
+				var html = '<li><a href="#"><img src="css/img/ic_action_' + entry['taskstatus'] + '.png"><h4>' + entry['taskname'] + '</h4><p>Time spent ' + toHHMMSS(entry['time_spent']) + ' sec</p></a></li>';
+				$('#userDetails').append(html).listview('refresh');
+			});
+		}
 	});
 });
 
