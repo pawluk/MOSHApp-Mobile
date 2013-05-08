@@ -1,6 +1,6 @@
 var instanse = false;
 var state;
-var file;
+var url= "http://mosh.kaldim.com/process.php";
 function Chat () {
     this.update = updateChat;
     this.send = sendChat;
@@ -11,8 +11,8 @@ function getStateOfChat(){
 		 instanse = true;
 		 $.ajax({
 			   type: "POST",
-			   url: "http://moshapp.kaldim.com/process.php",
-			   data: { 'function': 'getState','file': file},
+			   url: url,
+			   data: { 'function': 'getState'},
 			   dataType: "json",
 			   success: function(data){
 				   state = data.state;
@@ -26,8 +26,8 @@ function updateChat(){
 		 instanse = true;
 	     $.ajax({
 			   type: "POST",
-			   url: "http://moshapp.kaldim.com/process.php",
-			   data: {  'function': 'update','state': state,'file': file},
+			   url: url,
+			   data: {  'function': 'update','state': state},
 			   dataType: "json",
 			   success: function(data){
 				   if(data.text){
@@ -50,8 +50,8 @@ function sendChat(message, nickname)
     updateChat();
      $.ajax({
 		   type: "POST",
-		   url: "http://moshapp.kaldim.com/process.php",
-		   data: {  'function': 'send','message': message,'nickname': nickname,'file': file},
+		   url: url,
+		   data: {  'function': 'send','message': message,'nickname': nickname},
 		   dataType: "json",
 		   success: function(data){
 			   updateChat();

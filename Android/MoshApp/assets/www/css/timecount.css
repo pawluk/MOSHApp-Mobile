@@ -17,7 +17,7 @@ text-align:center;
 }
 
 #counter {
-	width: auto;
+	width: 20%;
 	min-width:300px;
 	height: 10%;
 	margin: 10px auto 0 auto;
@@ -103,7 +103,7 @@ text-align:center;
 
 
 #text {
-	width: auto;
+	width: 20%;
 	min-width:300px;
 	margin: 5px auto;
 	font-size: 12px;

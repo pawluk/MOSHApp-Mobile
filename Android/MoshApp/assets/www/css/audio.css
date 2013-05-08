@@ -7,7 +7,7 @@
     padding:13px 0;
   }
   #imgslider img,#imgslider1 img{
-  width:90%;
+  width:auto;
   }
   #imgslider ul, #imgslider ul li,#imgslider1 ul, #imgslider1 ul li{
   margin:0;padding:0;border:0;outline:0;font-size:100%;vertical-align:baseline;background:transparent;

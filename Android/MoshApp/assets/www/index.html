@@ -1,31 +1,57 @@
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+
+<!-- Google -->
 <html dir='ltr' xmlns='http://www.w3.org/1999/xhtml' xmlns:b='http://www.google.com/2005/gml/b' xmlns:data='http://www.google.com/2005/gml/data' xmlns:expr='http://www.google.com/2005/gml/expr'>
+
+<!--////////////////////////////////////////////////// BEGINS Header Information \\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\-->
 <head>
 <title>Mosh App</title>
 <meta http-equiv="Content-Type" content="text/html; charset=UTF-8"/>
+
+<!-- Loads Mobile Device View -->
 <meta content="width=device-width, ,initial-scale=1" name="viewport"/>
 <link rel="apple-touch-icon" href="icon.png">
 <link rel="apple-touch-icon" sizes="114x114" href="icon114.png" />
 <meta name="apple-mobile-web-app-capable" content="yes" />
 <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
 <link rel="apple-touch-startup-image" href="splash.png">
+
+<!-- Loads Web View -->
 <meta name="format-detection" content="telephone=no">
+<link rel="stylesheet" href="css/jquery.mobile-1.3.1.min.css" type="text/css" />
+<link rel="stylesheet" href="css/jquery.mobile.theme-1.3.1.min.css" type="text/css" />
+<link rel="stylesheet" href="css/jquery.mobil.simpledialog2.css" type="text/css" />
 
-<link rel="stylesheet" href="css/jquery.mobile-1.3.0.rc.1.min.css"
-	type="text/css" />
-	<link rel="stylesheet"
-	href="css/jquery.mobile.theme-1.3.0-beta.1.min.css" type="text/css" />
-	<link rel="stylesheet" href="css/jquery.mobil.simpledialog2.css"
-	type="text/css" />
-
+<!-- Loads the Default Element Styles -->
 <link rel="stylesheet" href="css/moshapp.css" type="text/css" />
 <link rel="stylesheet" href="css/timecount.css" type="text/css" />
 <link rel="stylesheet" href="css/audio.css" type="text/css" />
+<link href="css/photoswipe.css" type="text/css" rel="stylesheet" />
 
-<script type="text/javascript" charset="utf-8" src="cordova-2.4.0.js"></script>
+<!-- Load Cordova -->
+<script type="text/javascript" charset="utf-8" src="cordova-2.7.0.js"></script>
 <script type="text/javascript" charset="utf-8" src="barcodescanner.js"></script>
+
+<!-- Loads JQuery Libraries -->
 <script src="libs/jquery-1.9.1.min.js" type="text/javascript"></script>
-<script src="libs/jquery.migrate-1.1.0.js" type="text/javascript"></script>
+<script src="libs/jquery.migrate-1.1.1.js" type="text/javascript"></script>
+
+<!-- Google Analytic tracking -->
+<script type="text/javascript">
+		  var _gaq = _gaq || [];
+		  _gaq.push(['_setAccount', 'UA-38427716-3']);
+		  _gaq.push(['_setAllowLinker', true]);
+		  _gaq.push(['_setDomainName', 'kaldim.com']);
+		  _gaq.push(['_trackPageview']);
+		  (function() {
+		    var ga = document.createElement('script'); ga.type = 'text/javascript'; ga.async = true;
+		    ga.src = ('https:' == document.location.protocol ? 'https://ssl' : 'http://www') + '.google-analytics.com/ga.js';
+		    var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(ga, s);
+		  })();
+</script>
+
+
+<!-- Check/Prompt for Loading Pages -->
 <script type="text/javascript">
 $(document).ajaxStart(function() {
    $.mobile.loading( 'show', {
@@ -43,39 +69,53 @@ $(document).ajaxStop(function() {
         $.mobile.activeBtnClass = 'unused';
 		$.mobile.defaultDialogTransition = "none";
 		$.mobile.defaultPageTransition = "none";
-		 $.mobile.ajaxEnabled = true;
+		$.mobile.ajaxEnabled = true;
 	});
 </script>
-<script src="libs/jquery.mobile-1.3.0.rc.1.min.js" type="text/javascript"></script>
+
+<!-- Loads JQuery Mobile -->
+<script src="libs/jquery.mobile-1.3.1.min.js" type="text/javascript"></script>
+
+<!-- Loads All Javascript Files -->
 <script src="libs/jquery.mobile.simpledialog2.js" type="text/javascript"></script>
 <script src="js/db.js" type="text/javascript"></script>
-<!--<script src="js/audioplay.js" type="text/javascript"></script>-->
 <script src="libs/slider.js" type="text/javascript"></script>
 <script type="text/javascript" src="js/jquery.countdown.js"></script>
 <script src="js/chat.js" type="text/javascript"></script>
 <script src="js/main.js" type="text/javascript"></script>
-
-<!--<script type="text/javascript"
-	src="http://maps.google.com/maps/api/js?sensor=false"></script>-->
-
-	<script type="text/javascript"
-      src="https://maps.googleapis.com/maps/api/js?key=AIzaSyBEcRbFNMKICBihQjpUhdnXtyz9VlbZTdQ&sensor=true">
-    </script>
-
-
-
+<script type="text/javascript" src="https://maps.googleapis.com/maps/api/js?key=AIzaSyBEcRbFNMKICBihQjpUhdnXtyz9VlbZTdQ&sensor=true"></script>
 <script type="text/javascript" src="jquery.ui.map.beta/jquery.ui.map.js"></script>
-<script type="text/javascript"
-	src="jquery.ui.map.beta/jquery.ui.map.extensions.js"></script>
-<script type="text/javascript"
-	src="jquery.ui.map.beta/jquery.ui.map.services.js"></script>
+<script type="text/javascript" src="jquery.ui.map.beta/jquery.ui.map.extensions.js"></script>
+<script type="text/javascript" src="jquery.ui.map.beta/jquery.ui.map.services.js"></script>
 <script src="js/mapa.js" type="text/javascript"></script>
+<script type="text/javascript" src="libs/klass.min.js"></script>
+<script type="text/javascript" src="libs/code.photoswipe-3.0.5.min.js"></script>
 
 </head>
+<!--////////////////////////////////////////////////// ENDS Header Information \\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\-->
 
+
+
+
+
+
+
+
+<!--//////////////////////////////////////////////////////// BEGINS Body \\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\-->
 <body>
 
+
+
+
+
+
+
+
+<!------------------------------------------------------ Main Navigation Page ----------------------------------------------------->
 	<div data-role="page" id="page-main" data-theme="b" class="hidden">
+	<script type="text/javascript">
+		_gaq.push(['_trackPageview', '/#page-main']);
+	</script>
 		<div data-role="header" data-theme="a">
 			<h1>
 				MoshApp : <span>Main</span>
@@ -84,15 +124,12 @@ $(document).ajaxStop(function() {
 				data-iconpos="notext" class="ui-btn-right" data-theme="a"
 				data-transition="pop"></a>
 		</div>
+		<img src="img/logo.jpg" alt="Teaching and Learning" width="100%"/>
 
-
-
-		<!-- content -->
+		<!-- Main Content Area -->
 		<div data-role="content">
 
-
-
-
+			<!-- Login Form -->
 			<div id="login" data-content-theme="b" class="hidden">
 				
 					<label for="login_username">Username:</label> <input type="text"
@@ -101,11 +138,12 @@ $(document).ajaxStop(function() {
 						name="login_password" id="login_password" /><br>
 					<button id="login_submit" data-theme="c">Submit</button>
 				
-				<a href="pages/registerform.html" data-type="button">Register</a>
+			<!-- Currently disable <a href="pages/registerform.html" data-type="button">Register</a>-->
 				<ul id="testinput"></ul>
 			</div>
+            <!-- End Login Form -->
 
-
+			<!-- Draws Topbar/Menu and Counter -->
 			<div id="mainmenu" data-content-theme="b" class="hidden">
 				<div id="currentinfo" class="scandata">
 					<p>
@@ -116,7 +154,6 @@ $(document).ajaxStop(function() {
 						Remaining: <span class="smalltxt" id="itemtime">00:00</span>
 					</p>
 				</div>
-
 				<div id="gameremainingtime">
 					<div id="remainingtime">Remaining Time:</div>
 					<div id="counter"></div>
@@ -126,20 +163,14 @@ $(document).ajaxStop(function() {
 						<div class="minutes">MINUTES</div>
 						<div class="seconds">SECONDS</div>
 					</div>
-				</div>
-
-
-
+			</div>
+           	<!-- End Topbar/Menu and Counter -->
 
 			</div>
 		</div>
-		<!-- /content -->
+		<!-- End Main Content Area -->
 
-
-
-
-
-		<!-- footer -->
+		<!-- Begin Footer/Bottom Menu -->
 		<div id="mainnavbar" data-role="footer" data-theme="a" data-position="fixed"
 			class="hidden">
 			<div id="optmenu">
@@ -148,6 +179,7 @@ $(document).ajaxStop(function() {
 					id="smallmenuhide" data-role="button" data-icon="arrow-d"
 					data-iconpos="notext" class="ui-btn-right" data-theme="a"></a>
 			</div>
+            <!-- Main Bottom Menu -->
 			<div data-role="navbar">
 				<ul id="choisetohide">
 					<li><a href="#" id="scananswer" data-transition="slide"><img
@@ -159,27 +191,38 @@ $(document).ajaxStop(function() {
 				<ul>
 					<li><a href="#" id="chtbtn" data-transition="slide"><img
 							src="img/pw_chat.png" height="17" width="17" /><br />Chat</a></li>
-					<!--<a href="#page-item">    data-rel="dialog" href="#dialog-taskselection"
-						data-transition="pop"-->
 					<li><a href="#" id="taskspage"><img src="img/pw_task.png" height="17"
 							width="17" /><br />Task</a></li>
 					<li><a href="#page-contact" data-transition="slide"><img
 							src="img/pw_call.png" height="17" width="17" /><br />Contact</a></li>
 				</ul>
 			</div>
-			<!-- /navbar -->
 		</div>
-		<!-- /footer -->
+		<!-- End Footer/Bottom Menu -->
 	</div>
-	<!-- /page-item -->
+<!---------------------------------------------------- END Main Navigation Page --------------------------------------------------->               
 
 
+
+
+
+
+
+
+<!------------------------------------------------------------ Map Page ----------------------------------------------------------->
 	<div data-role="page" id="page-map" data-theme="b">
+	<script type="text/javascript">
+		_gaq.push(['_trackPageview', '/#page-map']);
+	</script>
+    	<!-- Map Page Content -->
 		<div class="map-content">
+        	<!-- Map Loads in This Div -->
 			<div id="map_canvas"></div>
+            <!-- Removes Controls -->
 			<div id="controls" style="display: none;">
 				<div data-role="controlgroup" data-type="horizontal" data-theme="b"
 					class="noclear ui-shadow">
+                    <!-- Footer/Bottom Nav Bar -->
 					<a href="#page-main" data-transition="slide"
 						data-direction="reverse" id="home" data-icon="back"
 						data-inline="true" data-role="button">Back</a> <a id="myloc"
@@ -189,22 +232,35 @@ $(document).ajaxStop(function() {
 				<span id="mapcenter" class="hidden"></span>
 			</div>
 		</div>
-		<!-- /content -->
-	</div>
-	<!-- /page-map -->
+		<!-- Ends Map Page Content -->
+  	</div>
+<!---------------------------------------------------------- END Map Page --------------------------------------------------------->
 
+
+
+
+
+	
+	
+
+<!--------------------------------------------------------- Task Info Page -------------------------------------------------------->	
 	<div data-role="dialog" id="dialog-task" data-theme="b">
+	<script type="text/javascript">
+		_gaq.push(['_trackPageview', '/#dialog-task']);
+	</script>
 		<div data-role="header" data-theme="b">
+        <!-- Title -->
 			<h1>Current Task</h1>
 		</div>
+        <!-- Task Info Page Content -->
 		<div data-role="content" data-theme="c">
 			<div class="scandata">
-				<!-- Successful scan required to save an item.<br/>	 -->
 				<p>
 					Task Status: <span id="taskstatus">On Progress</span><br />
 					Task Name: <span class="smalltxt" id="taskname"></span><br />
 					Location: <span class="smalltxt" id="campusname"></span><br />
-					Question: <span class="smalltxt" id="question"></span>&nbsp;&nbsp;&nbsp;&nbsp;Solved: <span class="smalltxt" id="solved"></span><br />
+					Question: <span class="smalltxt" id="question"></span>&nbsp;&nbsp;&nbsp;&nbsp;Solved: <span class="smalltxt" id="solved"></span>
+                    <br />
 					Time: <span class="smalltxt" id="itemtime"></span>
 				</p>
 			</div>
@@ -216,148 +272,251 @@ $(document).ajaxStop(function() {
 				src="img/map.png" height="17" width="27" />&nbsp;&nbsp;See it in Map</a>
 			<a data-rel="back" data-icon="back" data-role="button">Back</a>
 		</div>
+        <!-- Ends Task Info Page Content -->
 	</div>
-	<!-- Task Dialog END -->
-	
-	<!-- Leaderboard Page-->
-<div id="page-teamsList"  data-role="page" data-theme="c">
+<!------------------------------------------------------- END Task Info Page ------------------------------------------------------>
+
+
+
+
+
+
+
+
+<!-------------------------------------------------------- LeaderBoard Page ------------------------------------------------------->
+	<div id="page-teamsList"  data-role="page" data-theme="c">
+	<script type="text/javascript">
+		_gaq.push(['_trackPageview', '/#page-teamsList']);
+	</script>
 		<div data-role="header">
+        	<!-- Title -->
 			<h1>Teams Rank</h1>
-			<a href="#page-main" data-direction="reverse" data-transition="slide" data-icon="home" data-iconpos="notext" class="ui-btn-left" data-theme="a" title="Home"></a>
+            <!-- Top Nav Bar -->
+			<a href="#page-main" data-direction="reverse" data-transition="slide" data-icon="home" data-iconpos="notext" 
+            	class="ui-btn-left" data-theme="a" title="Home"></a>
 		</div>
+        <!-- Leaderboard Page Content -->
 		<div data-role="content">
  			<ul id="teamsList" data-role="listview" data-filter="true"></ul><br/>
-
 		</div>
+        <!-- Ends Leaderboard Page Content -->
 		<div data-role="footer" data-theme="a" data-position="fixed">
-		<div data-role="navbar">
+        	<!-- Bottom Navbar -->
+			<div data-role="navbar">
 				<ul>
 					<li><a data-rel="back" data-icon="back" data-role="button">Back</a></li>
 					<li><a data-icon="refresh" data-role="button" id="tskrfsh">Refresh</a></li>
 				</ul>
 			</div>
 		</div>
-	</div><!-- /page-tasks -->	
-	
-	
-<!--members-->	
-<div id="page-memberdetail"  data-role="page" data-theme="c">
-	<div data-role="header">
-			<h1>Contact Info</h1>
-			<a href="#page-main" data-direction="reverse" data-transition="slide" data-icon="home" data-iconpos="notext" class="ui-btn-left" data-theme="a" title="Home"></a>
-		</div>
-     <div data-role="content">
-	<ul id="memberDetails" data-role="listview"></ul><br/>
-    </div>
-	
-			<div data-role="footer" data-theme="a" data-position="fixed">
-		<div data-role="navbar">
-				<ul>
-					<li><a data-rel="back" data-icon="back" data-role="button">Back</a></li>
-				</ul>
-			</div>
-		</div>
-	</div><!-- /page-teammates -->
+	</div>
+<!------------------------------------------------------ END LeaderBoard Page ----------------------------------------------------->	
 
 
-<!-- User Task Details-->	
-	<div id="page-usertaskdetail"  data-role="page" data-theme="c">
-	<div data-role="header">
-			<h1>User Task Details</h1>
-			<a href="#page-main" data-direction="reverse" data-transition="slide" data-icon="home" data-iconpos="notext" class="ui-btn-left" data-theme="a" title="Home"></a>
-		</div>
-		
-		
-    <div data-role="content">
-    <div class="member-summary">
-        <header>
-           <h1>No User</h1>
-            <span id="secondinfo" class="link-text">No Team</span>
-        </header>
-    </div><br/>
-    
-    <ul id="userDetails" data-role="listview"></ul><br/>
-    </div>
+
+
+
+
 
 	
-			<div data-role="footer" data-theme="a" data-position="fixed">
-		<div data-role="navbar">
-				<ul>
-					<li><a data-rel="back" data-icon="back" data-role="button">Back</a></li>
-				</ul>
-			</div>
-		</div>
-	</div><!-- /page-teammates -->	
-	
-
-<!-- Teammates list-->	
-	<div id="page-contact"  data-role="page" data-theme="c">
+<!-------------------------------------------------------- Team Member Page ------------------------------------------------------->
+	<div id="page-memberdetail"  data-role="page" data-theme="c">
+	<script type="text/javascript">
+		_gaq.push(['_trackPageview', '/#page-memberdetail']);
+	</script>
 		<div data-role="header">
-			<h1>Team Mates</h1>
-			<a href="#page-main" data-direction="reverse" data-transition="slide" data-icon="home" data-iconpos="notext" class="ui-btn-left" data-theme="a" title="Home"></a>
+    		<!-- Title -->
+			<h1>Contact Info</h1>
+        	<!-- Top Nav Bar -->
+			<a href="#page-main" data-direction="reverse" data-transition="slide" data-icon="home" data-iconpos="notext" 
+        	class="ui-btn-left" data-theme="a" title="Home"></a>
 		</div>
+    	<!-- Team Member Page Content -->    
+    	<div data-role="content">
+			<ul id="memberDetails" data-role="listview"></ul><br/>
+    	</div>
+		<!-- Ends Team Member Page Content -->
+		<div data-role="footer" data-theme="a" data-position="fixed">
+        	<!-- Bottom Nav Bar -->
+			<div data-role="navbar">
+				<ul>
+					<li><a data-rel="back" data-icon="back" data-role="button">Back</a></li>
+				</ul>
+			</div>
+		</div>
+	</div>
+<!------------------------------------------------------ END Team Member Page ----------------------------------------------------->
+
+
+
+
+
+
+
+
+<!--------------------------------------------------------- User Task Page -------------------------------------------------------->
+	<div id="page-usertaskdetail"  data-role="page" data-theme="c">
+	<script type="text/javascript">
+		_gaq.push(['_trackPageview', '/#page-usertaskdetail']);
+	</script>
+		<div data-role="header">
+    		<!-- Title -->
+			<h1>User Task Details</h1>
+            <!-- Top Nav Bar -->
+			<a href="#page-main" data-direction="reverse" data-transition="slide" data-icon="home" data-iconpos="notext" 
+            class="ui-btn-left" data-theme="a" title="Home"></a>
+		</div>
+		
+		<!-- User Task Page Content -->
+    	<div data-role="content">
+    		<div class="member-summary">
+        		<header>
+           			<h1>No User</h1>
+            		<span id="secondinfo" class="link-text">No Team</span>
+       			</header>
+    		</div>
+            <br/>
+    		<ul id="userDetails" data-role="listview"></ul><br/>
+    	</div>
+        <!-- End User Task Page Content -->
+		<div data-role="footer" data-theme="a" data-position="fixed">
+        	<!-- Bottom Nav Bar -->
+			<div data-role="navbar">
+				<ul>
+					<li><a data-rel="back" data-icon="back" data-role="button">Back</a></li>
+				</ul>
+			</div>
+		</div>
+	</div>
+<!------------------------------------------------------- END User Task Page ------------------------------------------------------>
+
+
+
+
+
+
+
+
+<!----------------------------------------------------------- Team Page ----------------------------------------------------------->
+	<div id="page-contact"  data-role="page" data-theme="c">
+	<script type="text/javascript">
+		_gaq.push(['_trackPageview', '/#page-contact']);
+	</script>
+		<div data-role="header">
+        <!-- Title -->
+			<h1>Team Mates</h1>
+            <!-- Top Nav Bar -->
+			<a href="#page-main" data-direction="reverse" data-transition="slide" data-icon="home" data-iconpos="notext" 
+            class="ui-btn-left" data-theme="a" title="Home"></a>
+		</div>
+        <!-- Team Page Content -->
 		<div data-role="content">
  			<ul id="memberList" data-role="listview" data-filter="true"></ul><br/>
-		
 		</div>
+        <!-- End Team Page Content -->
 		<div data-role="footer" data-theme="a" data-position="fixed">
-		<div data-role="navbar">
+        	<!-- Bottom Nav Bar -->
+			<div data-role="navbar">
 				<ul>
 					<li><a data-rel="back" data-icon="back" data-role="button">Back</a></li>
 					<li><a data-icon="refresh" data-role="button" id="memberfsh">Refresh</a></li>
 				</ul>
 			</div>
 		</div>
-	</div><!-- /page-teammates -->
+	</div>
+<!--------------------------------------------------------- END Team Page --------------------------------------------------------->
 
 
-<!--Teammates details-->	
+
+
+
+
+
+
+<!----------------------------------------------------- Teammate Details Page ----------------------------------------------------->
 	<div id="page-teammemberdetail"  data-role="page" data-theme="c">
-	<div data-role="header">
+	<script type="text/javascript">
+		_gaq.push(['_trackPageview', '/#page-teammemberdetail']);
+	</script>
+		<div data-role="header">
+    		<!-- Title -->
 			<h1>Team Info</h1>
-			<a href="#page-main" data-direction="reverse" data-transition="slide" data-icon="home" data-iconpos="notext" class="ui-btn-left" data-theme="a" title="Home"></a>
+            <!-- Top Nav Bar -->
+			<a href="#page-main" data-direction="reverse" data-transition="slide" data-icon="home" data-iconpos="notext" 
+        	class="ui-btn-left" data-theme="a" title="Home"></a>
 		</div>
-<ul id="teamMembers" data-role="listview"></ul><br/>
-	
-			<div data-role="footer" data-theme="a" data-position="fixed">
-		<div data-role="navbar">
+        <!-- Teammate Detail Page Content -->
+		<ul id="teamMembers" data-role="listview"></ul><br/>
+		<!-- End Teammate Detail Page Content -->
+		<div data-role="footer" data-theme="a" data-position="fixed">
+        	<!-- Bottom Nav Bar -->
+			<div data-role="navbar">
 				<ul>
 					<li><a data-rel="back" data-icon="back" data-role="button">Back</a></li>
 				</ul>
 			</div>
 		</div>
-	</div><!-- /page-teammates -->	
+	</div>
+<!--------------------------------------------------- END Teammate Details Page --------------------------------------------------->
 	
-	
-	<!--TaskList page-->
-		<div id="page-tasklist"  data-role="page" data-theme="c">
+
+
+
+
+
+
+
+<!--------------------------------------------------------- Task List Page -------------------------------------------------------->
+	<div id="page-tasklist"  data-role="page" data-theme="c">
+	<script type="text/javascript">
+		_gaq.push(['_trackPageview', '/#page-tasklist']);
+	</script>
 		<div data-role="header">
+        <!-- Title -->
 			<h1>Tasks</h1>
-			<a href="#page-main" data-direction="reverse" data-transition="slide" data-icon="home" data-iconpos="notext" class="ui-btn-left" data-theme="a" title="Home"></a>
+            <!-- Top Navigation Bar -->
+			<a href="#page-main" data-direction="reverse" data-transition="slide" data-icon="home" data-iconpos="notext" 
+            class="ui-btn-left" data-theme="a" title="Home"></a>
 		</div>
+        <!-- Task List Page Content -->
 		<div data-role="content">
  			<ul id="taskList" data-role="listview" data-filter="true"></ul><br/>
-
 		</div>
+        <!-- End Task List Page Content -->
 		<div data-role="footer" data-theme="a" data-position="fixed">
-		<div data-role="navbar">
+        	<!-- Bottom Nav Bar -->
+			<div data-role="navbar">
 				<ul>
 					<li><a href="#page-main" data-icon="back" data-role="button">Back</a></li>
 					<li><a data-icon="refresh" data-role="button" id="tskrfsh">Refresh</a></li>
 				</ul>
 			</div>
 		</div>
-	</div><!-- /page-tasks -->
-	
+	</div>
+<!------------------------------------------------------- END Task List Page ------------------------------------------------------>
 
-<!--Task aceptation page-->
-<div data-role="page" id="page-taskaccept" data-theme="b">
+
+
+
+
+
+
+
+<!-------------------------------------------------------- Accept Task Page ------------------------------------------------------->
+	<div data-role="page" id="page-taskaccept" data-theme="b">
+	<script type="text/javascript">
+		_gaq.push(['_trackPageview', '/#page-taskaccept']);
+	</script>
 		<div data-role="header">
+        	<!-- Title -->
 			<h1>Task Accept</h1>
-			<a href="#page-main" data-direction="reverse" data-transition="slide" data-icon="home" data-iconpos="notext" class="ui-btn-left" data-theme="a" title="Home"></a>
+            <!-- Top Nav Bar -->
+			<a href="#page-main" data-direction="reverse" data-transition="slide" data-icon="home" data-iconpos="notext" 
+            class="ui-btn-left" data-theme="a" title="Home"></a>
 		</div>
+        <!-- Accept Task Page Content -->
 		<div class="content">
-		<div class="accpttsk"><div id="task_map_canvas"></div></div>
+			<div class="accpttsk"><div id="task_map_canvas"></div></div>
 				<div class="scandata">
 					<p>
 						Task: <span class="smalltxt" id="txttaskname"></span><br />
@@ -368,145 +527,188 @@ $(document).ajaxStop(function() {
 						Image: <span class="smalltxt" id="txtimages"></span><br />						
 					</p>
 				</div>
+			</div>
+            <!-- Bottom Nav Bar -->
+			<div id="tskacceptnav" data-role="footer" data-theme="a" data-position="fixed">
+				<div data-role="navbar">
+					<ul>
+						<li><a href="#page-main" data-icon="back" data-role="button">Cancel</a></li>
+						<li><a data-role="button" data-icon="star" data-theme="a" id="accept_task">Accept</a></li>
+					</ul>
+				</div>
+			</div>
+  		<!-- End Accept Task Page Content -->
+	</div>
+<!------------------------------------------------------ END Accept Task Page ----------------------------------------------------->
+
+
+
+
+
+
+
+
+<!--------------------------------------------------------- Main Task Page -------------------------------------------------------->
+	<div data-role="page" id="page-download">
+	<script type="text/javascript">
+		_gaq.push(['_trackPageview', '/#page-download']);
+	</script>
+		<div data-role="header" data-position="fixed">
+        	<!-- Title -->
+			<h1>Task Dictionary</h1>
+            <!-- Top Nav Bar -->
+			<a href="#page-main" data-direction="reverse" data-transition="slide" data-icon="home" data-iconpos="notext" 
+            class="ui-btn-left" data-theme="a" title="Home"></a>
 		</div>
-		<!-- /content -->
-		<div id="tskacceptnav" data-role="footer" data-theme="a" data-position="fixed">
+        	<!-- Loads Images for Tasks -->
+			<div id='gallery'>
+				<div id='imgslider'>
+    			<ul id="imgul"></ul>
+  				</div>
+  				<nav>
+    				<a href='#' id='prev'><em>prev</em></a>
+    				<span id='position'></span>
+    				<a href='#' id='next'><em>next</em></a>
+ 				</nav>
+			</div>
+        <!-- Main Task Page Content -->
+		<div data-role="content">
+			<button id="goquestions" data-icon="star" data-theme="c">Found Key</button>
+				<div data-role="collapsible" class="allcollapse" id="devmenu-help"
+					data-content-theme="c">
+                    <h3>Read</h3>
+					<strong>Description: </strong><span id="desc"></span>
+				</div>
+			<audio ontimeupdate="javascript:updateslider();" id="moshplayer">
+			</audio>
+		</div>
+        <!-- End Main Task Page Content -->
+		<div data-role="footer" data-theme="a" data-position="fixed">
+        	<!-- Bottom Nav Bar -->
 			<div data-role="navbar">
 				<ul>
-					<li><a href="#page-main" data-icon="back" data-role="button">Cancel</a></li>
-					<li><a data-role="button" data-icon="star" data-theme="a" id="accept_task">Accept</a></li>
+				<li>
+				<span id='sposition'><span id="audioinfo"></span></span><br/>
+				<input data-theme="c" type="range" name="slider" id="slider" value="0" min="0" max="100" data-highlight="true" disabled />
+				</li>
+				</ul>
+                
+				<ul>
+					<li><a data-icon="audio-play" id="play" data-iconpos="top" data-role="button">Play</a></li>
+					<li><a data-icon="audio-stop" id="stop" data-iconpos="top" data-role="button">Stop</a></li>
+					<li><a data-rel="back" data-icon="back" data-role="button">Back</a></li>
 				</ul>
 			</div>
 		</div>
 	</div>
-	<!-- /page-map -->
-	
-	
-	
-	<div data-role="page" id="page-download">
-	<div data-role="header" data-position="fixed">
-		<h1>Task Dictionary</h1>
-		<a href="#page-main" data-direction="reverse" data-transition="slide" data-icon="home" data-iconpos="notext" class="ui-btn-left" data-theme="a" title="Home"></a>
-	</div>
-<div id='gallery'>
+<!------------------------------------------------------- END Main Task Page ------------------------------------------------------>
 
-  <div id='imgslider'>
-    <ul id="imgul"></ul>
-  </div>
-  
-  <nav>
-    <a href='#' id='prev'><em>prev</em></a>
-    <span id='position'></span>
-    <a href='#' id='next'><em>next</em></a>
-  </nav>
 
-</div>
-	<div data-role="content">
-		<button id="goquestions" data-icon="star" data-theme="c">Found Key</button>
-		<div data-role="collapsible" class="allcollapse" id="devmenu-help"
-				data-content-theme="c">
-				<h3>Read</h3>
-		<strong>Description: </strong><span id="desc"></span>
-		</div>
-		<audio ontimeupdate="javascript:updateslider();" id="moshplayer">
-		</audio>
-	</div>
-	<div data-role="footer" data-theme="a" data-position="fixed">
-		<div data-role="navbar">
-		<ul>
-		<li>
-		<span id='sposition'><span id="audioinfo"></span></span><br/>
-		<input data-theme="c" type="range" name="slider" id="slider" value="0" min="0" max="100" data-highlight="true" disabled />
-		</li>
-		</ul>
-				<ul>
-					<!--<li><input type="button" id="play" data-role="button" data-icon="audio-play" data-iconpos="top" value="Play"/></li>
-					<li><input type="button" id="stop" data-role="button" data-icon="audio-stop" data-iconpos="top" value="Stop"/></li>-->
-					<li><a data-icon="audio-play" id="play" data-iconpos="top" data-role="button">Play</a></li>
-					<li><a data-icon="audio-stop" id="stop" data-iconpos="top" data-role="button">Stop</a></li>
-					<li><a data-rel="back" data-icon="back" data-role="button">Back</a></li>
-			</ul>
 
-			</div>
-		</div>
-</div>
+
+
+
+
 	
-	
-	
+<!------------------------------------------------------ QRCode/Web Code Page ----------------------------------------------------->	
 	<div id="page-scananswer"  data-role="page" data-theme="b">
+	<script type="text/javascript">
+			_gaq.push(['_trackPageview', '/#page-scananswer']);
+	</script>
 		<div data-role="header">
+        	<!-- Title -->
 			<h1>Scan & Enter ID</h1>
-			<a href="#page-main" data-direction="reverse" data-transition="slide" data-icon="home" data-iconpos="notext" class="ui-btn-left" data-theme="a" title="Home"></a>
+            <!-- Top Nav Bar -->
+			<a href="#page-main" data-direction="reverse" data-transition="slide" data-icon="home" data-iconpos="notext" 
+            class="ui-btn-left" data-theme="a" title="Home"></a>
 		</div>
 		<div data-role="content">
-		
-		<div id="scanarea">
-
-
+        	<!-- QRCode/Web Code Content -->
+			<div id="scanarea">
 				<div class="scandata">
 					<p>
 						<span id="genhead">Task Info&nbsp;</span><br />
-						Question: <span class="smalltxt" id="questions"></span>&nbsp;&nbsp;&nbsp;&nbsp;Solved: <span class="smalltxt" id="solveds"></span><br />						
-						<span class="smalltxt" id="errormsg">Please enter id.</span><br /> Time: <span
-							class="smalltxt" id="itemtime"></span>
-
-					</p>
-					
-			</div>
-			<br/>
+						Question: <span class="smalltxt" id="questions"></span>&nbsp;&nbsp;&nbsp;&nbsp;Solved: 
+                        <span class="smalltxt" id="solveds"></span><br />						
+						<span class="smalltxt" id="errormsg">Please enter id.</span><br /> Time: 
+                        <span class="smalltxt" id="itemtime"></span>
+					</p>	
+				</div>
+				<br/>
+				<a data-role="button" data-icon="star" data-theme="b" id="scan_btn">Scan QR Code</a>
+				<br/>
 				<label>Enter ID:</label>
 				<input id="questionid" type="text" placeholder="Enter ID that you found here:" data-clear-btn="true"/>
 				<a id="get_question" data-icon="grid" data-role="button">Get Question</a>
-				<a data-role="button" data-icon="star" data-theme="b" id="scan_btn">Scan QR Code</a>
-		</div>
+			</div>
+            <!-- End QRCode/Web Code Content -->
 		</div>
 		<div data-role="footer" data-theme="a" data-position="fixed">
-		<div data-role="navbar">
+        	<!-- Bottom Nav Bar -->
+			<div data-role="navbar">
 				<ul>
 					<li><a href="#page-main" data-direction="reverse" data-transition="slide" data-icon="back" data-role="button">Back</a></li>
 					<li><a href="#page-download" data-icon="info" data-transition="slide">Read & Listen</a></li>
 				</ul>
 			</div>
 		</div>
-	</div><!-- /page-tasks -->	
-	
-<!--question answer page-->	
-		<div id="page-questionanswer"  data-role="page" data-theme="b">
-		<div data-role="header">
-			<h1>Scan & Enter ID</h1>
-			<a href="#page-main" data-direction="reverse" data-transition="slide" data-icon="home" data-iconpos="notext" class="ui-btn-left" data-theme="a" title="Home"></a>
-		</div>
-<div id='gallery'>
-
-  <div id='imgslider1'>
-    <ul id="taskquestions"></ul>
-  </div>
-  
-  <nav>
-    <a href='#' id='qprev'><em>prev</em></a>
-    <span id='qposition'></span>
-    <a href='#' id='qnext'><em>next</em></a>
-  </nav>
-
-</div>
-		<div data-role="content">
-		
-		<div id="answercontent">
-		
-		<br /><br/>
-					<div id="singleanswer" class="hidden"><input id="singleans" type="text" placeholder="Enter your answer here" data-clear-btn="true"/></div>
-					<div  data-theme="c">
-					<div data-role="fieldcontain" id="multichoice" class="hidden"><fieldset id="multichoiceq" data-role="controlgroup"> </fieldset></div></div>
-					
-		</div>
-		
 	</div>
+<!---------------------------------------------------- END QRCode/Web Code Page --------------------------------------------------->
+
+
+
+
+
+
+
+
+<!------------------------------------------------------ Question/Answer Page ----------------------------------------------------->
+	<div id="page-questionanswer"  data-role="page" data-theme="b">
+	<script type="text/javascript">
+			_gaq.push(['_trackPageview', '/#page-questionanswer']);
+	</script>
+		<div data-role="header">
+        <!-- Title -->
+			<h1>Scan & Enter ID</h1>
+            <!-- Top Nav Bar -->
+			<a href="#page-main" data-direction="reverse" data-transition="slide" data-icon="home" data-iconpos="notext" 
+            class="ui-btn-left" data-theme="a" title="Home"></a>
+		</div>
+        <!-- Loads images on answer page -->
+		<div id='gallery'>
+			<div id='imgslider1'>
+    		<ul id="taskquestions"></ul>
+  			</div>
+		<nav>
+    		<a href='#' id='qprev'><em>prev</em></a>
+    		<span id='qposition'></span>
+    		<a href='#' id='qnext'><em>next</em></a>
+ 		</nav>
+		</div>
+		<div data-role="content">
+        	<!-- Question/Answer Page Content -->
+			<div id="answercontent">
+			<br />
+        	<br />
+            	<!-- User types in answer -->
+				<div id="singleanswer" class="hidden">
+                <input id="singleans" type="text" placeholder="Enter your answer here" data-clear-btn="true"/>
+          		</div>
+				<div data-theme="c">
+                	<!-- Multiple Choice Answers -->
+					<div data-role="fieldcontain" id="multichoice" class="hidden"><fieldset id="multichoiceq" data-role="controlgroup"> 
+                	</fieldset>
+                	</div>
+                </div>
+			</div>
+		</div>
+        <!-- Bottom Nav Bar -->
 		<div data-role="footer" data-theme="a" data-position="fixed">
 			<div id="optmenu">
 				<a id="menushow" data-role="button" data-icon="arrow-u" data-iconpos="notext" class="ui-btn-right" data-theme="a"></a> 
 				<a id="menuhide" data-role="button" data-icon="arrow-d" data-iconpos="notext" class="ui-btn-right" data-theme="a"></a>
 			</div>
-		<div data-role="navbar">
+			<div data-role="navbar">
 				<ul id="choisehide">
 					<li><a href="#page-map" data-icon="grid" data-transition="slide">Map</a></li>
 					<li><a href="#page-download" data-icon="info" data-transition="slide">Read & Listen</a></li>
@@ -517,67 +719,92 @@ $(document).ajaxStop(function() {
 				</ul>
 			</div>
 		</div>
-	</div><!-- /page-tasks -->
+	</div>
+<!---------------------------------------------------- END Question/Answer Page --------------------------------------------------->
+
 	
+
+
+
+
+
 	
-	
-	<!-- MENU / Settings -->
+<!------------------------------------------------------ Topbar Settings Page ----------------------------------------------------->
 	<div data-role="page" id="dialog-devmenu" data-theme="b">
+	<script type="text/javascript">
+			_gaq.push(['_trackPageview', '/#dialog-devmenu']);
+	</script>
 		<div data-role="header" data-theme="b">
+        	<!-- Top Level Title -->
 			<h1>
 				<span>Menu</span>
 			</h1>
 		</div>
+        <!-- Settings Page Content -->
 		<div data-role="content" data-theme="c">
-
-			<p>
-				MoshApp User: <br /> <span class="username dkgreen">Not
-					Logged In</span><br>
-			<div data-role="collapsible" class="allcollapse" id="devmenu-help"
-				data-content-theme="c">
-				<h3>Help with MoshApp</h3>
-				<p>MoshApp is designed to help all George Brown College Students
-					to learn college's services.</p>
+        	<!-- Displays Username -->
+			<p> MoshApp User: <br /> <span class="username dkgreen">Not Logged In</span><br>
+            <!-- Creates Collapsable Menu -->
+			<div data-role="collapsible" class="allcollapse" id="devmenu-help" data-content-theme="c">
+				<h3>MoshApp Help</h3>
+				<p>MoshApp is designed to familiarize all George Brown College students
+				   with the many different services offered by the college.</p>
 				<ul>
-				<li><span class="dkgreen">Scan Page</span> Scan QR codes to see
-					question releated with the task you have accepted. When scanning is
-					successfull, question,timespan will be saved ans then you can try
-					to find correct answer. <samp class="dkgreen"> Note:</samp> be
-					carefull when you are answering because each wrong answer will add
-					up extra 5 min for your timespan to solve this task.</li>
-				<li><span class="dkgreen">Chat Page</span> In this page you can
-					chat with your own team or with all other members who is logged in
-					to chat.</li>
-				<li><span class="dkgreen">Login</span> You will be able to use
-					your library login name and password to login this game.</li>
-				<li><span class="dkgreen">Contact Page</span> When you assigned
-					to a team you will get your team member contact information on this
-					page. You can cominicate with your team-mates based on their
-					requirements that they provide when they register, like phone or
-					e-mail.</li>
-				<li><span class="dkgreen">Task Page</span> This page will allow
-					you to see all the task that are available to you, and you will be
-					able to choose one to complete.<br/><samp class="dkgreen"> Note:</samp> Becarefull when choosing because
-					you will not be able to cancel until you answer correctly.</li>
+                	<!-- First Menu Option -->
+					<li>
+                    <span class="dkgreen">Scan QR Codes</span> Scan QR codes to see questions 
+                    that are related to the current task. Once you have scanned a QR code and answered a question, 
+                    the time you take to answer the question will be added to your total time.
+                    <samp class="dkgreen"> Note:</samp> 
+                    Be careful when answering questions, each wrong answer entered will add 5 minutes to your total time.
+                    </li>
+                    
+                    <!-- Second Menu Option -->
+					<li>
+                    <span class="dkgreen">Chatting</span> You can use this page in order to chat live with your teammates.
+                    </li>
+                    
+                    <!-- Third Menu Option -->
+					<li>
+                    <span class="dkgreen">Logging In</span> You will be able to use
+					your GBC username and password to login to MoshApp.
+                    </li>
+                    
+                    <!-- Fourth Menu Option -->
+					<li>
+                    <span class="dkgreen">Contacting Team</span> Once you are assigned
+					to a team you will get team member contact information. 
+                    You can communicate with your team members based on their
+					preferences.
+                    </li>
+                    
+                    <!-- Fifth Menu Option -->
+					<li>
+                    <span class="dkgreen">Tasks</span> The task page will allow
+					you to view all the tasks that are available and you can select one to complete. <br/>
+                    <samp class="dkgreen"> Note:</samp> Be careful when choosing a task because
+					you must complete the task in order to select a new task.
+                    </li>
 					</ul>
-				<ul	style="line-height: 1.4em; margin-bottom: 0.3em; margin-top: 0.2em;">
+                    
+				<!-- Contact Info -->
+                <ul	style="line-height: 1.4em; margin-bottom: 0.3em; margin-top: 0.2em;">
 					<li><a href="tel:0000000000">Call Facilitator</a></li>
 					<li><a href="mailto:example@example.com">E-mail Facilitator</a></li>
 				</ul>
 			</div>
-
-			<div data-role="collapsible" class="allcollapse"
-				data-content-theme="c">
-				<h3>Login / Logout</h3>
-				<p>Logging out; When you log out you must have internet connection to log in again.</p>
+			
+            <!-- Individual User Logout -->
+			<div data-role="collapsible" class="allcollapse" data-content-theme="c">
+				<h3>Login/Logout</h3>
+				<p>Logging out: Once you log out you must have internet connection to log in again.</p>
 				<div id="logout" data-role="button" data-theme="a">Log out</div>
-				<p>When logged out, all data about your account will be deleted from local storage.</p>
+				<p>Once you log out all information that was stored on your device will be deleted.</p>
 			</div>
-
-			<div data-role="collapsible" id="share_set" class="allcollapse"
-				data-content-theme="c">
+            <!-- User Personal Settings -->
+			<div data-role="collapsible" id="share_set" class="allcollapse" data-content-theme="c">
 				<h3>Settings</h3>
-				<p>All Settings and information will be placed here.</p>
+				<p>Personalize:</p>
 					<div class="containing-element">
 						<label for="flip-phone"><b>Phone Number visible to team members :</b>
 						<select name="flip-phone" id="flip-phone" data-role="slider" data-theme="c">
@@ -594,35 +821,50 @@ $(document).ajaxStop(function() {
 			<div data-role="collapsible" class="allcollapse"
 				data-content-theme="c">
 				<h3>About MoshApp</h3>
-
 				<p style="margin-top: 0.4em; margin-bottom: 0em;">
-					This app was created by <a href="http://www.georgebrown.ca">George
-						Brown College</a> , Computer Programmer / Analyst students.
+					This application was created by <a href="http://www.georgebrown.ca">George
+					Brown College</a> Computer Programmer and Computer Analyst students.
 				</p>
 				<ul	style="line-height: 1.4em; margin-bottom: 0.3em; margin-top: 0.2em;">
 					<li><a href="http://www.phonegap.com/">PhoneGap</a></li>
-					<li><a href="http://www.jquerymobile.com/">jQuery Mobile
-							Frameworks</a></li>
+					<li><a href="http://www.jquerymobile.com/">jQuery Mobile Frameworks</a></li>
 				</ul>
 			</div>
 			<a href="#" data-role="button" data-inline="true" data-rel="back">Close&nbsp;</a>
 		</div>
-		<!-- /content -->
+		<!-- End Settings Page Content -->
 	</div>
-	<!-- /dialog-devmenu --><!-- MENU / Settings -->
+<!---------------------------------------------------- END Topbar Settings Page --------------------------------------------------->
+
+
+
+
+
+
+
 	
-	<!--Chat page-->
-<div data-role="page" id="page-chat" data-theme="b" data-ajax='false'>
+<!------------------------------------------------------------ Chat Page ---------------------------------------------------------->
+	<div data-role="page" id="page-chat" data-theme="b" data-ajax='false'>
+	<script type="text/javascript">
+			_gaq.push(['_trackPageview', '/#page-chat']);
+	</script>
 		<div data-role="header">
-			<h1>General Chat</h1>
-			<a href="#page-main" data-direction="reverse" data-transition="slide" data-icon="home" data-iconpos="notext" class="ui-btn-left" data-theme="a" title="Home"></a>
+        <!-- Title -->
+			<h1>Chat</h1>
+            <!-- Top Nav Bar -->
+			<a href="#page-main" data-direction="reverse" data-transition="slide" data-icon="home" data-iconpos="notext" 
+            class="ui-btn-left" data-theme="a" title="Home"></a>
 		</div>
 		<div class="content">
-		<div class="chatscreen" id="chatscreen"></div>
-		<div class="msgcontrols" ><input type="text" name="txtmsg" id="txtmsg"/><a href="#" id="sendmsg" data-role="button">Send</a></div>
+        	<!-- Chat Page Content -->
+			<div class="chatscreen" id="chatscreen">
+            </div>
+			<div class="msgcontrols" ><input type="text" name="txtmsg" id="txtmsg"/><a href="#" id="sendmsg" data-role="button">Send</a>
+         	</div>
+			<!-- End Chat Page Content -->
 		</div>
-		<!-- /content -->
 		<div data-role="footer" data-theme="a" data-position="fixed">
+        	<!-- Bottom Nav Bar -->
 			<div data-role="navbar">
 				<ul>
 					<li><a href="#page-main" data-icon="back" data-role="button">Back</a></li>
@@ -630,8 +872,25 @@ $(document).ajaxStop(function() {
 			</div>
 		</div>
 	</div>
-	<!-- /page-map -->
-	
+<!---------------------------------------------------------- END Chat Page -------------------------------------------------------->
+
+
+
+
+
+
+
 
 </body>
+<!--/////////////////////////////////////////////////// ENDS Body Information \\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\-->
+
+
+
+
+
+
+
+
+
 </html>
+<!--~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ END OF APP ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~!-->

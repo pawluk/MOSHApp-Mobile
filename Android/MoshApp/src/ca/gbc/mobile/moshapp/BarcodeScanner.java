@@ -17,14 +17,14 @@ import android.content.Intent;
 import android.sax.StartElementListener;
 import android.util.Log;
 
-
-import org.apache.cordova.api.Plugin;
+import org.apache.cordova.api.CallbackContext;
+import org.apache.cordova.api.CordovaPlugin;
 import org.apache.cordova.api.PluginResult;
 
 /**
  * This calls out to the ZXing barcode reader and returns the result.
  */
-public class BarcodeScanner extends Plugin {
+public class BarcodeScanner extends CordovaPlugin {
     private static final String SCAN = "scan";
     private static final String CANCELLED = "cancelled";
     private static final String FORMAT = "format";
@@ -33,7 +33,7 @@ public class BarcodeScanner extends Plugin {
 
     public static final int REQUEST_CODE = 0x0ba7c0de;
 
-    public String callback;
+    public CallbackContext callbackContext;
 
     /**
      * Constructor.
@@ -49,16 +49,15 @@ public class BarcodeScanner extends Plugin {
      * @param callbackId    The callback id used when calling back into JavaScript.
      * @return              A PluginResult object with a status and message.
      */
-    public PluginResult execute(String action, JSONArray args, String callbackId) {
-        this.callback = callbackId;
+    @Override
+    public boolean execute(String action, JSONArray args, CallbackContext callbackContext) throws JSONException {
+        this.callbackContext = callbackContext;
        if (action.equals(SCAN)) {
             scan();
-        } else {
-            return new PluginResult(PluginResult.Status.INVALID_ACTION);
+            return true;
         }
-        PluginResult r = new PluginResult(PluginResult.Status.NO_RESULT);
-        r.setKeepCallback(true);
-        return r;
+       return false;
+
     }
 
 
@@ -71,7 +70,7 @@ public class BarcodeScanner extends Plugin {
         Intent intentScan = new Intent(SCAN_INTENT);
         intentScan.putExtra("SCAN_MODE", "QR_CODE_MODE");
        // intentScan.addCategory(Intent.CATEGORY_DEFAULT);   
-        this.cordova.startActivityForResult((Plugin) this, intentScan, REQUEST_CODE);
+        this.cordova.startActivityForResult((CordovaPlugin) this, intentScan, REQUEST_CODE);
     }
 
     /**
@@ -93,7 +92,8 @@ public class BarcodeScanner extends Plugin {
                 } catch(JSONException e) {
                     //Log.d(LOG_TAG, "This should never happen");
                 }
-                this.success(new PluginResult(PluginResult.Status.OK, obj), this.callback);
+                this.
+                callbackContext.success(obj);
             } if (resultCode == Activity.RESULT_CANCELED) {
                 JSONObject obj = new JSONObject();
                 try {
@@ -103,9 +103,9 @@ public class BarcodeScanner extends Plugin {
                 } catch(JSONException e) {
                     //Log.d(LOG_TAG, "This should never happen");
                 }
-                this.success(new PluginResult(PluginResult.Status.OK, obj), this.callback);
+                callbackContext.success(obj);
             } else {
-                this.error(new PluginResult(PluginResult.Status.ERROR), this.callback);
+            	callbackContext.error(1000);
             }
         }
     }
