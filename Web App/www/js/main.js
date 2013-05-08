@@ -28,6 +28,9 @@ window.addEventListener("load", function() {
 	//if device iphone scroll just down to status bar
 	if (checker.iphone) {
 		window.top.scrollTo(0, 1);
+		$('#download-app,#download-app-menu').attr('href','#').html('IOS App - Not Available').show();
+	}else if(checker.android){
+		$('#download-app,#download-app-menu').attr('href','apps/MoshApp.apk').html('Download Android App').show();
 	}
 });
 
@@ -765,15 +768,36 @@ $('#page-download').live('pageinit', function() {
 	isCheater();
 	isTaskSelected();
 	//initilizepage();
+	var flscreenimages=new Array();
 	for (var i = 0; i < window.localStorage.getItem("numberofscript"); i++) {
-		if (i === 0) $('#imgul').append('<li style="display:block"><div><img src="img/' + window.localStorage.getItem(("image" + i)) + '" width="320px" height="180px"/></div></li>');
-		else $('#imgul').append('<li style="display:none"><div><img src="img/' + window.localStorage.getItem(("image" + i)) + '" width="320px" height="180px"/></div></li>');
+		if (i === 0) $('#imgul').append('<li style="display:block"><div><img id="fcz_'+i+'" class="fulldcreen_zoom" src="img/scriptimgs/thumbs/' + window.localStorage.getItem(("image" + i)) + '" width="320px" height="180px"/></div></li>');
+		else $('#imgul').append('<li style="display:none"><div><img id="fcz_'+i+'" class="fulldcreen_zoom" src="img/scriptimgs/thumbs/' + window.localStorage.getItem(("image" + i)) + '" width="320px" height="180px"/></div></li>');
+		flscreenimages.push({url:'img/scriptimgs/' + window.localStorage.getItem(("image" + i)),caption:window.localStorage.getItem(("image" + i))});
 	}
+	(function(window, PhotoSwipe){
+		var options = {
+			getImageSource: function(obj){
+				return obj.url;
+			},
+			getImageCaption: function(obj){
+				return obj.caption;
+			},
+			enableKeyboard: false
+		},
+		instance = PhotoSwipe.attach( 
+			flscreenimages, 
+			options 
+		);
+		jQuery('.fulldcreen_zoom').click(function(){
+			var id = $(this).attr('id').substr(4);
+			instance.show(parseInt(id));		
+		});
+	}(window, window.Code.PhotoSwipe));
 	$('#audioinfo').html(window.localStorage.getItem("audio0"));
 	$('#desc').html(window.localStorage.getItem("scripttext0"));
 	var audname = window.localStorage.getItem("audio0");
 	audname = audname.substring(0, audname.length - 4);
-	$('<source id="typeacc" src="http://moshapp.kaldim.com/pages/accs/' + audname + '.m4a"><source id="typeogg" src="http://moshapp.kaldim.com/pages/ogg/' + audname + '.ogg"><source id="typemp3" src="http://moshapp.kaldim.com/pages/mp3s/' + audname + '.mp3"><source id="typewav" src="http://moshapp.kaldim.com/pages/wavs/' + audname + '.wav">').appendTo('#moshplayer');
+	$('<source id="typeacc" src="http://mosh.kaldim.com/pages/accs/' + audname + '.m4a"><source id="typeogg" src="http://mosh.kaldim.com/pages/ogg/' + audname + '.ogg"><source id="typemp3" src="http://mosh.kaldim.com/pages/mp3s/' + audname + '.mp3"><source id="typewav" src="http://moshapp.kaldim.com/pages/wavs/' + audname + '.wav">').appendTo('#moshplayer');
 	var slider = new Swipe(document.getElementById('imgslider'), {
 		callback: function(e, pos) {
 			var i = bullets.length;
@@ -786,10 +810,10 @@ $('#page-download').live('pageinit', function() {
 			audname = window.localStorage.getItem(("audio" + pos));
 			audname = audname.substring(0, audname.length - 4);
 			$('#moshplayer')[0].pause();
-			$('#typeacc').attr('src', 'http://moshapp.kaldim.com/pages/accs/' + audname + '.m4a');
-			$('#typemp3').attr('src', 'http://moshapp.kaldim.com/pages/mp3s/' + audname + '.mp3');
-			$('#typeogg').attr('src', 'http://moshapp.kaldim.com/pages/ogg/' + audname + '.ogg');
-			$('#typewav').attr('src', 'http://moshapp.kaldim.com/pages/ogg/' + audname + '.wav');
+			$('#typeacc').attr('src', 'http://mosh.kaldim.com/pages/accs/' + audname + '.m4a');
+			$('#typemp3').attr('src', 'http://mosh.kaldim.com/pages/mp3s/' + audname + '.mp3');
+			$('#typeogg').attr('src', 'http://mosh.kaldim.com/pages/ogg/' + audname + '.ogg');
+			$('#typewav').attr('src', 'http://mosh.kaldim.com/pages/ogg/' + audname + '.wav');
 			$('#stop').trigger('click');
 		}
 	}),
