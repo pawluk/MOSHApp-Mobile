@@ -639,7 +639,6 @@ $('#page-memberdetail').live('pageshow', function(event) {
 			data = $.parseJSON(data.responseText);
 			$('#memberDetails').empty();
 			$.map(data['contacts'], function(obj) {
-				console.log(obj);
 				var html = "";
 				if (obj['id'] == window.localStorage.getItem('cntactprm')) {
 					$('#memberDetails').append('<h1 align="center">' + obj['firstname'] + ' ' + obj['lastname'] + '</h1>').listview('refresh');
@@ -891,7 +890,6 @@ function getTeamsList() {
 		url: servicelink2 + '/teams',
 		complete: function(data) {
 			data = $.parseJSON(data.responseText);
-			console.log(data);
 			$('#teamsList').empty();
 			$.each(data['teams'], function(entryIndex, entry) {
 				var html = '<li id="tms' + entryIndex + '" data-icon="arrow-r" data-iconpos="right"></li>';
