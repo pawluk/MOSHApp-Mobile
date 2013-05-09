@@ -286,8 +286,6 @@ function go() {
 				},
 				success: function(data) {
 					if (data.sessionId !== undefined) {
-				success: function(data) {
-					var x = $.parseJSON(data);
 						saveSession(data.sessionId);
 						$.ajax({
 							url: servicelink2 + '/info?' + sessionQueryParams(),
@@ -784,7 +782,7 @@ $('#page-download').live('pageinit', function() {
 			confirmDialog("Task Key", "You will be redirected to the page where you can either enter the <b>Secret Key</b> or scan the <b>QR Code</b>", "#page-scananswer", true);
 		}
 	});
-	
+
 	var play_btn = $('#play');
 	var stop_btn = $('#stop');
 
