@@ -31,6 +31,8 @@
 		font-size: 16px;
 		font-weight:bold;
 		height:100px;
+		overflow: auto;
+		color: #344AC2;
    }
     #imgslider1 li .questiondiv span{
 		font-weight:bolder;

@@ -3,7 +3,7 @@
 // The Web Service URL
 var servicelink = "service/dbservice.php",
 	// For now, until the C# web service is 100% done, we will be using both the PHP service and the C#-based one
-	servicelink2 = "http://localhost:9000"; // Change this to the URL of the web service
+	servicelink2 = "api"; // Change this to the URL of the web service
 
 ////-- End config variables --////
 
@@ -286,6 +286,8 @@ function go() {
 				},
 				success: function(data) {
 					if (data.sessionId !== undefined) {
+				success: function(data) {
+					var x = $.parseJSON(data);
 						saveSession(data.sessionId);
 						$.ajax({
 							url: servicelink2 + '/info?' + sessionQueryParams(),
@@ -782,6 +784,31 @@ $('#page-download').live('pageinit', function() {
 			confirmDialog("Task Key", "You will be redirected to the page where you can either enter the <b>Secret Key</b> or scan the <b>QR Code</b>", "#page-scananswer", true);
 		}
 	});
+	
+	var play_btn = $('#play');
+	var stop_btn = $('#stop');
+
+	play_btn.click(function() {
+		if ($('#play .ui-btn-text').html() == 'Play') {
+			$('#moshplayer')[0].play();
+			$('#slider').attr('max', Math.round($('#moshplayer')[0].duration));
+			$('#slider').slider('refresh');
+			$('#play .ui-btn-text').html('Pause');
+			$('#play .ui-icon').addClass('ui-icon-audio-pause').removeClass('ui-icon-audio-play');
+		} else {
+			$('#moshplayer')[0].pause();
+			$('#play .ui-btn-text').html('Play');
+			$('#play .ui-icon').addClass('ui-icon-audio-play').removeClass('ui-icon-audio-pause');
+		}
+	});
+
+	stop_btn.click(function() {
+		$('#moshplayer')[0].load();
+		$('#play .ui-btn-text').html('Play');
+		$('#play .ui-icon').addClass('ui-icon-audio-play').removeClass('ui-icon-audio-pause');
+		$('#slider').val(0);
+		$('#slider').slider('refresh');
+	});
 }).live('pageshow', function(event) {
 	isCheater();
 	isTaskSelected();
@@ -852,30 +879,6 @@ $('#page-download').live('pageinit', function() {
 		else $('#position').append('<em>&bull;</em>');
 	}
 
-	var play_btn = $('#play');
-	var stop_btn = $('#stop');
-
-	play_btn.click(function() {
-		if ($('#play .ui-btn-text').html() == 'Play') {
-			$('#moshplayer')[0].play();
-			$('#slider').attr('max', Math.round($('#moshplayer')[0].duration));
-			$('#slider').slider('refresh');
-			$('#play .ui-btn-text').html('Pause');
-			$('#play .ui-icon').addClass('ui-icon-audio-pause').removeClass('ui-icon-audio-play');
-		} else {
-			$('#moshplayer')[0].pause();
-			$('#play .ui-btn-text').html('Play');
-			$('#play .ui-icon').addClass('ui-icon-audio-play').removeClass('ui-icon-audio-pause');
-		}
-	});
-
-	stop_btn.click(function() {
-		$('#moshplayer')[0].load();
-		$('#play .ui-btn-text').html('Play');
-		$('#play .ui-icon').addClass('ui-icon-audio-play').removeClass('ui-icon-audio-pause');
-		$('#slider').val(0);
-		$('#slider').slider('refresh');
-	});
 }).live('pagehide', function(e) {
 	slider = "";
 	$('#imgul').empty();

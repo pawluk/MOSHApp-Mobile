@@ -156,7 +156,7 @@ class DB_Functions {
 		$result = mysql_query( $query );
 		if ( $result ) {
 			$rid = mysql_insert_id(); // last inserted id
-			$result = mysql_query( "SELECT * FROM answers WHERE q_id = ".$q_id." AND LOWER(answer) = (Select LOWER(response) from responses Where r_id = ".$rid.")" );
+			$result = mysql_query("SELECT * FROM answers WHERE q_id = ".$q_id." AND ((answer IS NULL) OR (LOWER(answer) = (Select LOWER(response) from responses Where r_id = ".$rid.")))");
 			$no_of_rows = mysql_num_rows( $result );
 			if ( $no_of_rows>0 ) {
 				mysql_query( "UPDATE responses set q_status = 1 WHERE r_id = ".$rid );
