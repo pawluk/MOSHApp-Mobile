@@ -672,36 +672,40 @@ $('#page-tasklist').live('pageshow', function(event) {
 
 function getTaskList() {
 	//ask service to return all task for a user in a game, by providing game id and user id
-	$.post(servicelink, "tag=gettasklist&g_id=" + window.localStorage.getItem("gameid") + "&u_id=" + window.localStorage.getItem("sid")).done(function(data, textStatus, jqXHR) {
-		$('#taskList').empty();
-		data = $.parseJSON(data);
-		var loc = "";
-		$.each(data['tasks'], function(entryIndex, entry) {
-			if (entry['status'] == 2) loc = "#";
-			else loc = "#";
-			var html = '<li id="tsk' + entryIndex + '"></li>';
-			$('#taskList').append(html);
-			var btn = $('<a href="' + loc + '"><img src="css/img/ic_action_' + entry['status'] + '.png"><h4>' + entry['taskname'] + '</h4><p>Required Task: ' + entry['requiredtsk'] + '</p></a>');
-			btn.bind('click', function() {
-				var found = false;
-				$.map(data['tasks'], function(obj) {
-					if (obj['taskid'] == entry['requiredtsk'] && obj['status'] != 2) {
-						fadingMsg('You haven\'t done "' + obj['taskname'] + '" task yet.');
-						found = true;
+	$.ajax({
+		type: 'GET',
+		url: servicelink2 + '/tasks?' + sessionQueryParams(),
+		complete: function(data) {
+			data = $.parseJSON(data.responseText);
+			console.log(data);
+			var loc = "";
+			$.each(data['tasks'], function(entryIndex, entry) {
+				if (entry['status'] == 2) loc = "#";
+				else loc = "#";
+				var html = '<li id="tsk' + entryIndex + '"></li>';
+				$('#taskList').append(html);
+				var btn = $('<a href="' + loc + '"><img src="css/img/ic_action_' + entry['status'] + '.png"><h4>' + entry['taskname'] + '</h4><p>Required Task: ' + entry['requiredtsk'] + '</p></a>');
+				btn.bind('click', function() {
+					var found = false;
+					$.map(data['tasks'], function(obj) {
+						if (obj['taskid'] == entry['requiredtsk'] && obj['status'] != 2) {
+							fadingMsg('You haven\'t done "' + obj['taskname'] + '" task yet.');
+							found = true;
+						}
+					});
+					if (!found && entry['status'] != 2) {
+						window.localStorage.setItem("temptaskid", entry['taskid']);
+						$.mobile.changePage("#page-taskaccept", {
+							transition: "slide",
+							reverse: false,
+							changeHash: false
+						});
 					}
 				});
-				if (!found && entry['status'] != 2) {
-					window.localStorage.setItem("temptaskid", entry['taskid']);
-					$.mobile.changePage("#page-taskaccept", {
-						transition: "slide",
-						reverse: false,
-						changeHash: false
-					});
-				}
+				$('#tsk' + entryIndex).append(btn);
+				$('#taskList').listview('refresh');
 			});
-			$('#tsk' + entryIndex).append(btn);
-			$('#taskList').listview('refresh');
-		});
+		}
 	});
 }
 
