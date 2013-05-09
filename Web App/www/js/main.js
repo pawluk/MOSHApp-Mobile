@@ -232,16 +232,12 @@ $('#dialog-devmenu').live('pageinit', function(event) {
 		window.localStorage.setItem("phoneoption", window.localStorage.getItem("tempphoneoption"));
 		window.localStorage.setItem("emailoption", window.localStorage.getItem("tempemailoption"));
 		$.ajax({
-			url: servicelink2 + "/users/" + window.localStorage.getItem("sid") + "/options",
+			url: servicelink2 + "/users/" + window.localStorage.getItem("sid") + "/options?" + sessionQueryParams(),
 			type: "post",
-			data: JSON.stringify({
+			data: {
 				userId: window.localStorage.getItem("sid"),
-				phoneVisible: window.localStorage.getItem("phoneoption"),
-				emailVisible: window.localStorage.getItem("emailoption")
-			}),
-			success: function(data) {
-				data = $.parseJSON(data);
-				if (data.status == 1) {}
+				phoneVisible: parseInt(window.localStorage.getItem("phoneoption"), 10) !== 0 ? true : false,
+				emailVisible: parseInt(window.localStorage.getItem("emailoption"), 10) !== 0 ? true : false
 			}
 		});
 	}
