@@ -743,19 +743,27 @@ $('#page-taskaccept').live('pageshow', function(event) {
 
 	//accept button will insert all information to progress table and on successfull insertion will return all information are returned and saved to localstorage
 	$('#accept_task').click(function() {
-		$.post(servicelink, "tag=accepttask&t_id=" + window.localStorage.getItem("teamid") + "&tsk_id=" + tskid + "&u_id=" + window.localStorage.getItem("sid") + "&status=1").done(function(data, textStatus, jqXHR) {
-			var x = $.parseJSON(data);
-			saveuserInfo(x.userinfo);
-			if (x.hasOwnProperty('scripts')) {
-				saveuserScript(x.scripts);
-				saveuserQuestions(x.questions);
+		$.ajax({
+			type: 'POST',
+			url: servicelink2 + '/tasks/' + tskid + '?' + sessionQueryParams(),
+			data: {
+				status: 1
+			},
+			complete: function(data) {
+				data = $.parseJSON(data.responseText);
+				console.log(data);
+				saveuserInfo(data.userinfo);
+				if (data.hasOwnProperty('scripts')) {
+					saveuserScript(data.scripts);
+					saveuserQuestions(data.questions);
+				}
+				//fadingMsg("You have accepted the task. Good luck!");
+				//window.localStorage.setItem("reload","true");reloadPage:true
+				//$.mobile.changePage( "#page-main", { transition: "slide"} );
+				$('#tskacceptnav').hide();
+				window.localStorage.setItem("reload", "true");
+				confirmDialog("info", "Now, you will be redirected to the page where you can listen and read task directions.<br/><div align='center'><b>Good Luck!</b></div>", "#page-download");
 			}
-			//fadingMsg("You have accepted the task. Good luck!");
-			//window.localStorage.setItem("reload","true");reloadPage:true
-			//$.mobile.changePage( "#page-main", { transition: "slide"} );
-			$('#tskacceptnav').hide();
-			window.localStorage.setItem("reload", "true");
-			confirmDialog("info", "Now, you will be redirected to the page where you can listen and read task directions.<br/><div align='center'><b>Good Luck!</b></div>", "#page-download");
 		});
 	});
 
