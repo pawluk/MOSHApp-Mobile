@@ -717,24 +717,28 @@ $('#page-taskaccept').live('pageshow', function(event) {
 	window.localStorage.removeItem("temptaskid");
 
 	//ask task information and load
-	$.post(servicelink, "tag=taskdetail&t_id=" + tskid).done(function(data, textStatus, jqXHR) {
-		data = $.parseJSON(data);
-		$('#txttaskname').html(data['taskname']);
-		$('#txtcampusname').html(data['campus']);
-		$('#txtquestions').html(data['questions']);
-		$('#txtscript').html(data['numberofdic']);
-		$('#txtaudio').html(data['numberofdic']);
-		$('#txtimages').html(data['numberofdic']);
-		tskloc = new google.maps.LatLng(data['campuslat'], data['campuslng']);
-		$('#task_map_canvas').gmap({
-			'center': data['campuslat'] + "," + data['campuslng']
-		});
-		$('#task_map_canvas').gmap('addMarker', {
-			'position': tskloc,
-			animation: google.maps.Animation.DROP,
-			'bounds': true
-		});
-		$('#task_map_canvas').gmap('option', 'zoom', 13);
+	$.ajax({
+		type: 'GET',
+		url: servicelink2 + '/tasks/' + tskid + '/detail?' + sessionQueryParams(),
+		complete: function(data) {
+			data = $.parseJSON(data.responseText);
+			$('#txttaskname').html(data['taskname']);
+			$('#txtcampusname').html(data['campus']);
+			$('#txtquestions').html(data['questions']);
+			$('#txtscript').html(data['numberofdic']);
+			$('#txtaudio').html(data['numberofdic']);
+			$('#txtimages').html(data['numberofdic']);
+			tskloc = new google.maps.LatLng(data['campuslat'], data['campuslng']);
+			$('#task_map_canvas').gmap({
+				'center': data['campuslat'] + "," + data['campuslng']
+			});
+			$('#task_map_canvas').gmap('addMarker', {
+				'position': tskloc,
+				animation: google.maps.Animation.DROP,
+				'bounds': true
+			});
+			$('#task_map_canvas').gmap('option', 'zoom', 13);
+		}
 	});
 
 	//accept button will insert all information to progress table and on successfull insertion will return all information are returned and saved to localstorage
