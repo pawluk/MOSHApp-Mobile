@@ -677,7 +677,7 @@ function getTaskList() {
 		url: servicelink2 + '/tasks?' + sessionQueryParams(),
 		complete: function(data) {
 			data = $.parseJSON(data.responseText);
-			console.log(data);
+			$('#taskList').empty();
 			var loc = "";
 			$.each(data['tasks'], function(entryIndex, entry) {
 				if (entry['status'] == 2) loc = "#";
