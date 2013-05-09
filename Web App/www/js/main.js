@@ -911,20 +911,24 @@ function getTeamsList() {
 
 //on leaderboard when they select team they will redirected to this page where they will see all members of that team information
 $('#page-teammemberdetail').live('pageshow', function(event) {
-	$.post(servicelink, "tag=teammembers&t_id=" + window.localStorage.getItem('tmsprm')).done(function(data, textStatus, jqXHR) {
-		data = $.parseJSON(data);
-		$('#teamMembers').empty();
-		$('#teamMembers').append('<h1  align="center">' + data['tname'] + '</h1>');
-		$.each(data['teammembers'], function(entryIndex, entry) {
-			var html = '<li id="mmbs' + entryIndex + '" data-icon="arrow-r" data-iconpos="right"></li>';
-			$('#teamMembers').append(html);
-			var mmberbtn = $('<a href="#page-usertaskdetail?id=' + entry['id'] + '"><img src="css/img/ic_action_user.png"><h4>' + entry['nickname'] + '</h4><p>Time spent ' + toHHMMSS(entry['time_spent']) + ' sec</p></a>');
-			mmberbtn.bind('click', function() {
-				window.localStorage.setItem('tmsmmbrprm', entry['id']);
+	$.ajax({
+		type: 'GET',
+		url: servicelink2 + '/teams/' + window.localStorage.getItem('tmsprm') + '/members',
+		complete: function(data) {
+			data = $.parseJSON(data.responseText);
+			$('#teamMembers').empty();
+			$('#teamMembers').append('<h1  align="center">' + data['tname'] + '</h1>');
+			$.each(data['teammembers'], function(entryIndex, entry) {
+				var html = '<li id="mmbs' + entryIndex + '" data-icon="arrow-r" data-iconpos="right"></li>';
+				$('#teamMembers').append(html);
+				var mmberbtn = $('<a href="#page-usertaskdetail?id=' + entry['id'] + '"><img src="css/img/ic_action_user.png"><h4>' + entry['nickname'] + '</h4><p>Time spent ' + toHHMMSS(entry['time_spent']) + ' sec</p></a>');
+				mmberbtn.bind('click', function() {
+					window.localStorage.setItem('tmsmmbrprm', entry['id']);
+				});
+				$('#mmbs' + entryIndex).append(mmberbtn);
+				$('#teamMembers').listview('refresh');
 			});
-			$('#mmbs' + entryIndex).append(mmberbtn);
-			$('#teamMembers').listview('refresh');
-		});
+		}
 	});
 });
 
