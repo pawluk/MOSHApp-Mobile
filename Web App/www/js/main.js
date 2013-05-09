@@ -898,7 +898,7 @@ function getTeamsList() {
 			$.each(data['teams'], function(entryIndex, entry) {
 				var html = '<li id="tms' + entryIndex + '" data-icon="arrow-r" data-iconpos="right"></li>';
 				$('#teamsList').append(html);
-				var tmbtn = $('<a href="#page-teammemberdetail"><img src="img/teams.png"><h4>' + entry['tname'] + '</h4><p>Time spent ' + toHHMMSS(entry['time_spent']) + ' sec</p><span class="ui-li-count">Rank ' + (entryIndex + 1) + '</span></a>');
+				var tmbtn = $('<a href="#page-teammemberdetail"><img src="img/teams.png"><h4>' + entry['tname'] + '</h4><p>Time spent ' + toHHMMSS(entry['time_spent']) + '</p><span class="ui-li-count">Rank ' + (entryIndex + 1) + '</span></a>');
 				tmbtn.bind('click', function() {
 					window.localStorage.setItem('tmsprm', entry['id']);
 				});
@@ -921,7 +921,7 @@ $('#page-teammemberdetail').live('pageshow', function(event) {
 			$.each(data['teammembers'], function(entryIndex, entry) {
 				var html = '<li id="mmbs' + entryIndex + '" data-icon="arrow-r" data-iconpos="right"></li>';
 				$('#teamMembers').append(html);
-				var mmberbtn = $('<a href="#page-usertaskdetail?id=' + entry['id'] + '"><img src="css/img/ic_action_user.png"><h4>' + entry['nickname'] + '</h4><p>Time spent ' + toHHMMSS(entry['time_spent']) + ' sec</p></a>');
+				var mmberbtn = $('<a href="#page-usertaskdetail?id=' + entry['id'] + '"><img src="css/img/ic_action_user.png"><h4>' + entry['nickname'] + '</h4><p>Time spent ' + toHHMMSS(entry['time_spent']) + '</p></a>');
 				mmberbtn.bind('click', function() {
 					window.localStorage.setItem('tmsmmbrprm', entry['id']);
 				});
@@ -943,7 +943,7 @@ $('#page-usertaskdetail').live('pageshow', function(event) {
 			$('.member-summary h1').html(data['nickname']);
 			$('#secondinfo').html(data['tname'] + ' Team Member');
 			$.each(data['tasks'], function(entryIndex, entry) {
-				var html = '<li><a href="#"><img src="css/img/ic_action_' + entry['taskstatus'] + '.png"><h4>' + entry['taskname'] + '</h4><p>Time spent ' + toHHMMSS(entry['time_spent']) + ' sec</p></a></li>';
+				var html = '<li><a href="#"><img src="css/img/ic_action_' + entry['taskstatus'] + '.png"><h4>' + entry['taskname'] + '</h4><p>Time spent ' + toHHMMSS(entry['time_spent']) + '</p></a></li>';
 				$('#userDetails').append(html).listview('refresh');
 			});
 		}
@@ -951,22 +951,12 @@ $('#page-usertaskdetail').live('pageshow', function(event) {
 });
 
 function toHHMMSS(sec) {
-	var sec_numb = parseInt(sec, 10);
-	var hours = Math.floor(sec_numb / 3600);
-	var minutes = Math.floor((sec_numb - (hours * 3600)) / 60);
-	var seconds = sec_numb - (hours * 3600) - (minutes * 60);
+	var hours = parseInt(sec / 3600, 10) % 24;
+	var minutes = parseInt(sec / 60, 10) % 60;
+	var seconds = sec % 60;
 
-	if (hours < 10) {
-		hours = "0" + hours;
-	}
-	if (minutes < 10) {
-		minutes = "0" + minutes;
-	}
-	if (seconds < 10) {
-		seconds = "0" + seconds;
-	}
-	var time = hours + ':' + minutes + ':' + seconds;
-	return time;
+	var result = (hours < 10 ? "0" + hours : hours) + ":" + (minutes < 10 ? "0" + minutes : minutes) + ":" + (seconds < 10 ? "0" + seconds : seconds);
+	return result;
 }
 
 //any error or notification are sent to this function which will be overlay to screen and shows message
