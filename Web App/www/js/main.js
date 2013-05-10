@@ -681,30 +681,57 @@ function getTaskList() {
 			$('#taskList').empty();
 			var loc = "";
 			$.each(data['tasks'], function(entryIndex, entry) {
-				if (entry['status'] == 2) loc = "#";
-				else loc = "#";
-				var html = '<li id="tsk' + entryIndex + '"></li>';
-				$('#taskList').append(html);
-				var btn = $('<a href="' + loc + '"><img src="css/img/ic_action_' + entry['status'] + '.png"><h4>' + entry['taskname'] + '</h4><p>Required Task: ' + entry['requiredtsk'] + '</p></a>');
-				btn.bind('click', function() {
-					var found = false;
-					$.map(data['tasks'], function(obj) {
-						if (obj['taskid'] == entry['requiredtsk'] && obj['status'] != 2) {
-							fadingMsg('You haven\'t done "' + obj['taskname'] + '" task yet.');
-							found = true;
-						}
-					});
-					if (!found && entry['status'] != 2) {
-						window.localStorage.setItem("temptaskid", entry['taskid']);
-						$.mobile.changePage("#page-taskaccept", {
-							transition: "slide",
-							reverse: false,
-							changeHash: false
-						});
-					}
-				});
-				$('#tsk' + entryIndex).append(btn);
-				$('#taskList').listview('refresh');
+				 var found=false;
+                        var btn=$('<a id="tsk_'+entry['taskid']+'"></a>');
+                        if(entry['status']===0){
+                                                $.map(data['tasks'], function(obj) {
+                                                        if(obj['taskid']== entry['requiredtsk'] && obj['status']!=2){
+                                                        found=true;
+                                                        }
+                                                });
+                                        btn.bind('click',function(){
+                                                $.map(data['tasks'], function(obj) {
+                                                        if(obj['taskid']== entry['requiredtsk'] && obj['status']!=2){
+                                                        fadingMsg('You haven\'t done "'+obj['taskname']+'" task yet.');
+                                                        found=true;
+                                                        }
+                                                });
+                                                if(!found){
+                                                        window.localStorage.setItem("temptaskid",entry['taskid']);
+                                                        $.mobile.changePage( "#page-taskaccept", { transition: "slide",reverse: false,changeHash: false} );
+                                                }
+                                        });
+
+                        }
+                        var progressinfo="";
+                        var color="";
+                          switch(entry['status']){
+                                case 0:
+                                        if(found){
+                                        progressinfo = "Locked";
+                                        color="d";
+                                        }else{
+                                        progressinfo = "Available";
+                                        color="b";
+                                        }
+                                        break;
+                                case '1':
+                                        progressinfo = "In Progress";
+                                        color="e";
+                                        break;
+                                case '2':
+                                        progressinfo = "Finished";
+                                        color="a"
+                                        break;
+                        }
+                        var html='<li data-theme="'+color+'" id="tsk'+entryIndex+'"></li>';
+                        $('#taskList').append(html)
+                        $('#tsk'+entryIndex).append(btn);
+						var info = '<img src="css/img/ic_action_'+entry['status']+'.png"><h4>'+entry['taskname']+'</h4><p>Required Task: '+entry['requiredtsk']+'&emsp;'+progressinfo+'</p>';
+                        if(entry['user'])
+                        info +='<p>User : '+entry['user']+'</p>';
+                        $('#tsk_'+entry['taskid']).append(info);
+                $('#taskList').listview('refresh');
 			});
 		}
 	});

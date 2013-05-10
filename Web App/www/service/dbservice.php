@@ -26,10 +26,10 @@ if ( isset( $_POST['tag'] ) && $_POST['tag'] != '' ) {
 	} else if ( $tag == 'userinfo' && ( isset( $_POST['u_id'] ) && $_POST['u_id'] != '' ) ) {
 		$u_id = $_POST['u_id'];
 		getUserTaskInfo( $u_id );
-	} else if ( $tag == 'gettasklist' && ( isset( $_POST['g_id'] ) && $_POST['g_id'] != '' )&& ( isset( $_POST['u_id'] ) && $_POST['u_id'] != '' ) ) {
+	} else if ( $tag == 'gettasklist' && ( isset( $_POST['g_id'] ) && $_POST['g_id'] != '' )&& ( isset( $_POST['t_id'] ) && $_POST['t_id'] != '' ) ) {
 		$g_id = $_POST['g_id'];
-		$u_id = $_POST['u_id'];
-		getTasklist( $g_id, $u_id );
+		$t_id = $_POST['t_id'];
+		getTasklist( $g_id, $t_id );
 	} else if ( $tag == 'taskdetail' && ( isset( $_POST['t_id'] ) && $_POST['t_id'] != '' ) ) {
 		$t_id = $_POST['t_id'];
 		getTaskDetail( $t_id );
@@ -369,10 +369,10 @@ function getUserTaskInfo( $u_id ) {
 	}
 }
 
-function getTasklist( $g_id, $u_id ) {
+function getTasklist( $g_id, $t_id ) {
 	global $db;
 	global $response;
-	$tasklist = $db->getAllavailabletasks( $g_id, $u_id );
+	$tasklist = $db->getAllavailabletasks( $g_id, $t_id );
 	if ( $tasklist != false ) {
 		$response["success"] = 1;
 		while ( $row = mysql_fetch_array( $tasklist ) ) {
@@ -380,6 +380,7 @@ function getTasklist( $g_id, $u_id ) {
 				"requiredtsk" => $row['prv_tsk_id'] ? $row['prv_tsk_id'] : 'None',
 				"taskid"      => $row["tsk_id"],
 				"status"      => $row['status'] ? $row['status'] : 0,
+				"user"		  => $row['user']?$row['user']:0,
 				"taskname"    => $row["tsk_name"],
 				"campusid"    => $row["c_id"],
 				"campusname"  => $row["c_name"],

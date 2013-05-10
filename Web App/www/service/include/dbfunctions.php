@@ -95,11 +95,12 @@ class DB_Functions {
 			return false;
 	}
 
-	public function getAllavailabletasks( $g_id, $u_id ) {
-		$query = sprintf( 'SELECT gt.prv_tsk_id, tsk.tsk_id,(select max(p.status) from progress p where p.tsk_id=tsk.tsk_id AND p.u_id=%s) status , tsk.tsk_name, c.c_id, c.c_name, c.c_lat, c.c_lng FROM tasks tsk INNER JOIN game_task gt ON tsk.tsk_id = gt.tsk_id INNER JOIN campus c ON c.c_id = tsk.c_id Where gt.g_id=%s AND SYSDATE() < (Select finis_time from game where g_id = %s)',
-			mysql_real_escape_string( $u_id ),
-			mysql_real_escape_string( $g_id ),
-			mysql_real_escape_string( $g_id ) );
+	public function getAllavailabletasks( $g_id, $t_id ) {
+		$query = sprintf('SELECT gt.prv_tsk_id, tsk.tsk_id,(select max(p.status) from progress p where p.tsk_id=tsk.tsk_id AND p.t_id=%s) status,(Select u_nickname From users where  u_id = (Select u_id From progress p where p.tsk_id = tsk.tsk_id AND p.status = 1 AND p.t_id = %s)) user , tsk.tsk_name, c.c_id, c.c_name, c.c_lat, c.c_lng FROM tasks tsk INNER JOIN game_task gt ON tsk.tsk_id = gt.tsk_id INNER JOIN campus c ON c.c_id = tsk.c_id Where gt.g_id=%s AND SYSDATE() < (Select finis_time from game where g_id = %s)',
+			 mysql_real_escape_string($t_id),
+			 mysql_real_escape_string($t_id),
+			 mysql_real_escape_string($g_id),
+			  mysql_real_escape_string($g_id));
 		$result = mysql_query( $query );
 		$no_of_rows = mysql_num_rows( $result );
 		if ( $no_of_rows>0 )
