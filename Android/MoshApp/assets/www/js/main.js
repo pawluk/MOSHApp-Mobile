@@ -1,7 +1,14 @@
+////---- Config variables ----////
+
+// The Web Service URL
+var host = "http://mosh.kaldim.com/";
+var servicelink = host+"service/dbservice.php",
+	// For now, until the C# web service is 100% done, we will be using both the PHP service and the C#-based one
+	servicelink2 = host+"api"; // Change this to the URL of the web service
+
+////-- End config variables --////
+
 var isconnected = false;
-//some database connection made from main and pages folder so thats why we are separating
-var servicelink = "http://mosh.kaldim.com/service/dbservice.php";
-var servicelink1 = "http://mosh.kaldim.com/service/dbservice.php";
 
 //online offline listener works for any connection required for a page or function to work
 document.addEventListener("offline", function() {
@@ -222,9 +229,14 @@ $('#dialog-devmenu').live('pageinit', function(event) {
 	if (window.localStorage.getItem("tempemailoption") != window.localStorage.getItem("emailoption") || window.localStorage.getItem("tempphoneoption") != window.localStorage.getItem("phoneoption")) {
 		window.localStorage.setItem("phoneoption", window.localStorage.getItem("tempphoneoption"));
 		window.localStorage.setItem("emailoption", window.localStorage.getItem("tempemailoption"));
-		$.post(servicelink, "tag=updateuseroption&u_id=" + window.localStorage.getItem("sid") + "&pstatus=" + window.localStorage.getItem("phoneoption") + "&estatus=" + window.localStorage.getItem("emailoption")).done(function(data, textStatus, jqXHR) {
-			data = $.parseJSON(data);
-			if (data.status == 1) {}
+		$.ajax({
+			url: servicelink2 + "/users/" + window.localStorage.getItem("sid") + "/options?" + sessionQueryParams(),
+			type: "post",
+			data: {
+				userId: window.localStorage.getItem("sid"),
+				phoneVisible: parseInt(window.localStorage.getItem("phoneoption"), 10) !== 0 ? true : false,
+				emailVisible: parseInt(window.localStorage.getItem("emailoption"), 10) !== 0 ? true : false
+			}
 		});
 	}
 	//remove temporarly keeped user option data
@@ -263,42 +275,48 @@ function go() {
 		} else {
 			//ask server if user exist
 			$.ajax({
-				async: "false",
-				type: "POST",
-				url: servicelink1,
-				data: "tag=login&userName=" + credentials.userName + "&password=" + credentials.password,
+				async: false,
+				type: 'POST',
+				url: servicelink2 + '/authenticate',
+				data: {
+					userName: credentials.userName,
+					password: credentials.password
+				},
 				success: function(data) {
-					var x = $.parseJSON(data);
-					if (x.success == 1) {
-						//if loginned user have nick name then save their info
-						if (x.u_nickname !== null && x.u_nickname !== "") {
-							saveuser(x.u_id, credentials.userName);
-						} else {
-							// nickname will be asked here
-						}
+					if (data.sessionId !== undefined) {
+						saveSession(data.sessionId);
+						$.ajax({
+							url: servicelink2 + '/info?' + sessionQueryParams(),
+							async: false,
+							success: function(data) {
+								// If newly logged in user has a nickname, then save their info
+								if (data.user.nickname !== null && data.user.nickname !== "") {
+									saveuser(data.user.id, credentials.userName);
+								} else {
+									// username will be asked here
+								}
+							}
+						});
 					} else {
 						fadingMsg("Incorrect username or password. Please try again.");
 					}
-
-				}, //on complation of login ask for all user info, such as team name, game id, and if they have task accepted already that info
+				},
 				complete: function(data) {
+					// on completion of login, ask for all user info, such as team name, game id, and if they have tasks accepted already
 					if (window.localStorage.getItem("sid")) {
 						$.ajax({
-							async: "false",
-							type: "POST",
-							url: servicelink1,
-							data: "tag=userinfo&u_id=" + window.localStorage.getItem("sid"),
+							async: false,
+							type: 'GET',
+							url: servicelink2 + '/init?' + sessionQueryParams(),
 							success: function(data) {
-								//save all information retrieved on localstorage all those save functions under db.js
-								var x = $.parseJSON(data);
-								saveuserInfo(x.userinfo);
-								if (x.hasOwnProperty('scripts')) {
-									saveuserScript(x.scripts);
-									saveuserQuestions(x.questions);
+								saveuserInfo(data.userinfo);
+								if (data.hasOwnProperty('scripts')) {
+									saveuserScript(data.scripts);
+									saveuserQuestions(data.questions);
 								}
 							},
 							complete: function(data) {
-								//after completion of all those two database calls we are checking again if user info saved and letting them go main page, this function is under db.js
+								// after completion of the two database calls, check again if the user info is saved, and let them go to the main page.
 								isloggedin();
 							},
 							error: function(data) {}
@@ -330,7 +348,7 @@ function startTimer() {
 		var timedif = (new Date()).getTime() + 1000;
 		var gmfinish = window.localStorage.getItem("gamefinish");
 		if (gmfinish != "undefined") {
-			timedif = (new Date()).getTime() + ((new Date(gmfinish.replace(" ", "T") + "+00:00")).getTime() - (new Date()).getTime());
+			timedif = (new Date()).getTime() + ((new Date(gmfinish + "+00:00")).getTime() - (new Date()).getTime());
 		}
 		$('#counter').empty();
 		$('#counter').countdown({
@@ -491,6 +509,7 @@ function changeContent(pos) {
 	var solved = "notsolved";
 	if (window.localStorage.getItem(("questionstatus" + pos)) == 1) solved = "solved";
 	if (window.localStorage.getItem(("questiontype" + pos)) == 2) {
+		$('#multichoiceq').empty();
 		var aa = result.split("~&~");
 		var question = aa[0];
 		var options = aa[1].split("~");
@@ -592,53 +611,59 @@ $('#page-contact').live('pageshow', function(event) {
 });
 
 function getMemberList() {
-	//retrieves teammates contact information with sending user id to service
-	$.post(servicelink, "tag=contact&u_id=" + window.localStorage.getItem("sid")).done(function(data, textStatus, jqXHR) {
-		data = $.parseJSON(data);
-		$('#memberList').empty();
-		$.each(data['contacts'], function(entryIndex, entry) {
-			var list = '<li id="list-' + entryIndex + '" data-icon="arrow-r" data-iconpos="right"></li>';
-			$('#memberList').append(list);
-			var imgs = "";
-			//if user allowed teammates can see his phone number it shows on page
-			if (entry['phone'] !== 0) {
-				imgs += '<img src="css/img/ic_action_phone_outgoing.png"><img src="css/img/ic_action_dialog.png">';
-			}
-			//if user allowed teammates can see his email it shows on page
-			if (entry['email'] !== 0) {
-				imgs += ' <img src="css/img/ic_action_mail.png">';
-			}
-			var memberbtn = $('<a href="#page-memberdetail"><img src="img/pw_call.png"/><h4>' + entry['nickname'] + '</h4><span class="ui-li-aside">' + imgs + '</span></a>');
-			memberbtn.bind('click', function() {
-				window.localStorage.setItem('cntactprm', entry['id']);
+	$.ajax({
+		type: 'GET',
+		url: servicelink2 + '/teams/contact?' + sessionQueryParams(),
+		complete: function(data) {
+			data = $.parseJSON(data.responseText);
+			$('#memberList').empty();
+			$.each(data['contacts'], function(entryIndex, entry) {
+				var list = '<li id="list-' + entryIndex + '" data-icon="arrow-r" data-iconpos="right"></li>';
+				$('#memberList').append(list);
+				var imgs = "";
+				//if user allowed teammates can see his phone number it shows on page
+				if (entry.hasOwnProperty('phone')) {
+					imgs += '<img src="css/img/ic_action_phone_outgoing.png"><img src="css/img/ic_action_dialog.png">';
+				}
+				//if user allowed teammates can see his email it shows on page
+				if (entry.hasOwnProperty('email')) {
+					imgs += ' <img src="css/img/ic_action_mail.png">';
+				}
+				var memberbtn = $('<a href="#page-memberdetail"><img src="img/pw_call.png"/><h4>' + entry['nickname'] + '</h4><span class="ui-li-aside">' + imgs + '</span></a>');
+				memberbtn.bind('click', function() {
+					window.localStorage.setItem('cntactprm', entry['id']);
+				});
+				$('#list-' + entryIndex).append(memberbtn);
+				//refresh unordered list to get jquery theme for dynamically added elements
+				$('#memberList').listview('refresh');
 			});
-			$('#list-' + entryIndex).append(memberbtn);
-			//refresh unordered list to get jquery theme for dynamically added elements
-			$('#memberList').listview('refresh');
-		});
+		}
 	});
 }
 
 $('#page-memberdetail').live('pageshow', function(event) {
 	isCheater();
-	//retrieves same information as teammates list but shows single member information
-	$.post(servicelink, "tag=contact&u_id=" + window.localStorage.getItem("sid")).done(function(data, textStatus, jqXHR) {
-		data = $.parseJSON(data);
-		$('#memberDetails').empty();
-		$.map(data['contacts'], function(obj) {
-			var html = "";
-			if (obj['id'] === window.localStorage.getItem('cntactprm')) {
-				$('#memberDetails').append('<h1 align="center">' + obj['firstname'] + ' ' + obj['lastname'] + '</h1>').listview('refresh');
-				if (obj['phone'] !== 0) {
-					html += '<li><a href="tel:' + obj['phone'] + '"><img src=""/><h4>Cell</h4><p>' + obj['phone'] + '</p><span class="ui-li-aside"><img src="css/img/ic_action_phone_outgoing.png"></span></a></li>';
-					html += '<li><a href="sms:' + obj['phone'] + '"><img src=""/><h4>SMS</h4><p>' + obj['phone'] + '</p><span class="ui-li-aside"><img src="css/img/ic_action_dialog.png"></span></a></li>';
+	$.ajax({
+		type: 'GET',
+		url: servicelink2 + '/teams/contact?' + sessionQueryParams(),
+		complete: function(data) {
+			data = $.parseJSON(data.responseText);
+			$('#memberDetails').empty();
+			$.map(data['contacts'], function(obj) {
+				var html = "";
+				if (obj['id'] == window.localStorage.getItem('cntactprm')) {
+					$('#memberDetails').append('<h1 align="center">' + obj['firstname'] + ' ' + obj['lastname'] + '</h1>').listview('refresh');
+					if (obj.hasOwnProperty('phone')) {
+						html += '<li><a href="tel:' + obj['phone'] + '"><img src=""/><h4>Cell</h4><p>' + obj['phone'] + '</p><span class="ui-li-aside"><img src="css/img/ic_action_phone_outgoing.png"></span></a></li>';
+						html += '<li><a href="sms:' + obj['phone'] + '"><img src=""/><h4>SMS</h4><p>' + obj['phone'] + '</p><span class="ui-li-aside"><img src="css/img/ic_action_dialog.png"></span></a></li>';
+					}
+					if (obj.hasOwnProperty('email')) {
+						html += '<li><a href="mailto:' + obj['email'] + '"><img src=""/><h4>E-mail</h4><p>' + obj['email'] + '</p><span class="ui-li-aside"><img src="css/img/ic_action_mail.png"></span></a></li>';
+					}
 				}
-				if (obj['email'] !== 0) {
-					html += '<li><a href="mailto:' + obj['email'] + '"><img src=""/><h4>E-mail</h4><p>' + obj['email'] + '</p><span class="ui-li-aside"><img src="css/img/ic_action_mail.png"></span></a></li>';
-				}
-			}
-			$('#memberDetails').append(html).listview('refresh');
-		});
+				$('#memberDetails').append(html).listview('refresh');
+			});
+		}
 	});
 });
 
@@ -662,36 +687,40 @@ $('#page-tasklist').live('pageshow', function(event) {
 
 function getTaskList() {
 	//ask service to return all task for a user in a game, by providing game id and user id
-	$.post(servicelink, "tag=gettasklist&g_id=" + window.localStorage.getItem("gameid") + "&u_id=" + window.localStorage.getItem("sid")).done(function(data, textStatus, jqXHR) {
-		$('#taskList').empty();
-		data = $.parseJSON(data);
-		var loc = "";
-		$.each(data['tasks'], function(entryIndex, entry) {
-			if (entry['status'] == 2) loc = "#";
-			else loc = "#";
-			var html = '<li id="tsk' + entryIndex + '"></li>';
-			$('#taskList').append(html);
-			var btn = $('<a href="' + loc + '"><img src="css/img/ic_action_' + entry['status'] + '.png"><h4>' + entry['taskname'] + '</h4><p>Required Task: ' + entry['requiredtsk'] + '</p></a>');
-			btn.bind('click', function() {
-				var found = false;
-				$.map(data['tasks'], function(obj) {
-					if (obj['taskid'] == entry['requiredtsk'] && obj['status'] != 2) {
-						fadingMsg('You haven\'t done "' + obj['taskname'] + '" task yet.');
-						found = true;
+	$.ajax({
+		type: 'GET',
+		url: servicelink2 + '/tasks?' + sessionQueryParams(),
+		complete: function(data) {
+			data = $.parseJSON(data.responseText);
+			$('#taskList').empty();
+			var loc = "";
+			$.each(data['tasks'], function(entryIndex, entry) {
+				if (entry['status'] == 2) loc = "#";
+				else loc = "#";
+				var html = '<li id="tsk' + entryIndex + '"></li>';
+				$('#taskList').append(html);
+				var btn = $('<a href="' + loc + '"><img src="css/img/ic_action_' + entry['status'] + '.png"><h4>' + entry['taskname'] + '</h4><p>Required Task: ' + entry['requiredtsk'] + '</p></a>');
+				btn.bind('click', function() {
+					var found = false;
+					$.map(data['tasks'], function(obj) {
+						if (obj['taskid'] == entry['requiredtsk'] && obj['status'] != 2) {
+							fadingMsg('You haven\'t done "' + obj['taskname'] + '" task yet.');
+							found = true;
+						}
+					});
+					if (!found && entry['status'] != 2) {
+						window.localStorage.setItem("temptaskid", entry['taskid']);
+						$.mobile.changePage("#page-taskaccept", {
+							transition: "slide",
+							reverse: false,
+							changeHash: false
+						});
 					}
 				});
-				if (!found && entry['status'] != 2) {
-					window.localStorage.setItem("temptaskid", entry['taskid']);
-					$.mobile.changePage("#page-taskaccept", {
-						transition: "slide",
-						reverse: false,
-						changeHash: false
-					});
-				}
+				$('#tsk' + entryIndex).append(btn);
+				$('#taskList').listview('refresh');
 			});
-			$('#tsk' + entryIndex).append(btn);
-			$('#taskList').listview('refresh');
-		});
+		}
 	});
 }
 
@@ -703,41 +732,53 @@ $('#page-taskaccept').live('pageshow', function(event) {
 	window.localStorage.removeItem("temptaskid");
 
 	//ask task information and load
-	$.post(servicelink, "tag=taskdetail&t_id=" + tskid).done(function(data, textStatus, jqXHR) {
-		data = $.parseJSON(data);
-		$('#txttaskname').html(data['taskname']);
-		$('#txtcampusname').html(data['campus']);
-		$('#txtquestions').html(data['questions']);
-		$('#txtscript').html(data['numberofdic']);
-		$('#txtaudio').html(data['numberofdic']);
-		$('#txtimages').html(data['numberofdic']);
-		tskloc = new google.maps.LatLng(data['campuslat'], data['campuslng']);
-		$('#task_map_canvas').gmap({
-			'center': data['campuslat'] + "," + data['campuslng']
-		});
-		$('#task_map_canvas').gmap('addMarker', {
-			'position': tskloc,
-			animation: google.maps.Animation.DROP,
-			'bounds': true
-		});
-		$('#task_map_canvas').gmap('option', 'zoom', 13);
+	$.ajax({
+		type: 'GET',
+		url: servicelink2 + '/tasks/' + tskid + '/detail?' + sessionQueryParams(),
+		complete: function(data) {
+			data = $.parseJSON(data.responseText);
+			$('#txttaskname').html(data['taskname']);
+			$('#txtcampusname').html(data['campus']);
+			$('#txtquestions').html(data['questions']);
+			$('#txtscript').html(data['numberofdic']);
+			$('#txtaudio').html(data['numberofdic']);
+			$('#txtimages').html(data['numberofdic']);
+			tskloc = new google.maps.LatLng(data['campuslat'], data['campuslng']);
+			$('#task_map_canvas').gmap({
+				'center': data['campuslat'] + "," + data['campuslng']
+			});
+			$('#task_map_canvas').gmap('addMarker', {
+				'position': tskloc,
+				animation: google.maps.Animation.DROP,
+				'bounds': true
+			});
+			$('#task_map_canvas').gmap('option', 'zoom', 13);
+		}
 	});
 
 	//accept button will insert all information to progress table and on successfull insertion will return all information are returned and saved to localstorage
 	$('#accept_task').click(function() {
-		$.post(servicelink, "tag=accepttask&t_id=" + window.localStorage.getItem("teamid") + "&tsk_id=" + tskid + "&u_id=" + window.localStorage.getItem("sid") + "&status=1").done(function(data, textStatus, jqXHR) {
-			var x = $.parseJSON(data);
-			saveuserInfo(x.userinfo);
-			if (x.hasOwnProperty('scripts')) {
-				saveuserScript(x.scripts);
-				saveuserQuestions(x.questions);
+		$.ajax({
+			type: 'POST',
+			url: servicelink2 + '/tasks/' + tskid + '?' + sessionQueryParams(),
+			data: {
+				status: 1
+			},
+			complete: function(data) {
+				data = $.parseJSON(data.responseText);
+				console.log(data);
+				saveuserInfo(data.userinfo);
+				if (data.hasOwnProperty('scripts')) {
+					saveuserScript(data.scripts);
+					saveuserQuestions(data.questions);
+				}
+				//fadingMsg("You have accepted the task. Good luck!");
+				//window.localStorage.setItem("reload","true");reloadPage:true
+				//$.mobile.changePage( "#page-main", { transition: "slide"} );
+				$('#tskacceptnav').hide();
+				window.localStorage.setItem("reload", "true");
+				confirmDialog("info", "Now, you will be redirected to the page where you can listen and read task directions.<br/><div align='center'><b>Good Luck!</b></div>", "#page-download");
 			}
-			//fadingMsg("You have accepted the task. Good luck!");
-			//window.localStorage.setItem("reload","true");reloadPage:true
-			//$.mobile.changePage( "#page-main", { transition: "slide"} );
-			$('#tskacceptnav').hide();
-			window.localStorage.setItem("reload", "true");
-			confirmDialog("info", "Now, you will be redirected to the page where you can listen and read task directions.<br/><div align='center'><b>Good Luck!</b></div>", "#page-download");
 		});
 	});
 
@@ -756,41 +797,61 @@ $('#page-download').live('pageinit', function() {
 			confirmDialog("Task Key", "You will be redirected to the page where you can either enter the <b>Secret Key</b> or scan the <b>QR Code</b>", "#page-scananswer", true);
 		}
 	});
+
+	var play_btn = $('#play');
+	var stop_btn = $('#stop');
+
+	play_btn.click(function() {
+		if ($('#play .ui-btn-text').html() == 'Play') {
+			playAudio();
+			$('#play .ui-btn-text').html('Pause');
+			$('#play .ui-icon').addClass('ui-icon-audio-pause').removeClass('ui-icon-audio-play');
+		} else {
+			pauseAudio();
+			$('#play .ui-btn-text').html('Play');
+			$('#play .ui-icon').addClass('ui-icon-audio-play').removeClass('ui-icon-audio-pause');
+		}
+	});
+
+	stop_btn.click(function() {
+		stopAudio();
+		$('#play .ui-btn-text').html('Play');
+		$('#play .ui-icon').addClass('ui-icon-audio-play').removeClass('ui-icon-audio-pause');
+	});
 }).live('pageshow', function(event) {
 	isCheater();
 	isTaskSelected();
 	//initilizepage();
-	var flscreenimages=new Array();
+	var flscreenimages = [];
 	for (var i = 0; i < window.localStorage.getItem("numberofscript"); i++) {
-		if (i === 0) $('#imgul').append('<li style="display:block"><div><img id="fcz_'+i+'" class="fulldcreen_zoom" src="http://mosh.kaldim.com/img/scriptimgs/thumbs/' + window.localStorage.getItem(("image" + i)) + '" width="320px" height="180px"/></div></li>');
-		else $('#imgul').append('<li style="display:none"><div><img id="fcz_'+i+'" class="fulldcreen_zoom" src="http://mosh.kaldim.com/img/scriptimgs/thumbs/' + window.localStorage.getItem(("image" + i)) + '" width="320px" height="180px"/></div></li>');
-		flscreenimages.push({url:'http://mosh.kaldim.com/img/scriptimgs/' + window.localStorage.getItem(("image" + i)),caption:window.localStorage.getItem(("image" + i))});
+		if (i === 0) $('#imgul').append('<li style="display:block"><div><img id="fcz_' + i + '" class="fulldcreen_zoom" src="'+host+'img/scriptimgs/thumbs/' + window.localStorage.getItem(("image" + i)) + '" width="320px" height="180px"/></div></li>');
+		else $('#imgul').append('<li style="display:none"><div><img id="fcz_' + i + '" class="fulldcreen_zoom" src="'+host+'img/scriptimgs/thumbs/' + window.localStorage.getItem(("image" + i)) + '" width="320px" height="180px"/></div></li>');
+		flscreenimages.push({
+			url: host +'img/scriptimgs/' + window.localStorage.getItem(("image" + i)),
+			caption: window.localStorage.getItem(("image" + i))
+		});
 	}
-	(function(window, PhotoSwipe){
+	(function(window, PhotoSwipe) {
 		var options = {
-			getImageSource: function(obj){
+			getImageSource: function(obj) {
 				return obj.url;
 			},
-			getImageCaption: function(obj){
+			getImageCaption: function(obj) {
 				return obj.caption;
 			},
-			enableKeyboard: false,
-			captionAndToolbarShowEmptyCaptions: false
+			enableKeyboard: false
 		},
-		instance = PhotoSwipe.attach( 
-			flscreenimages, 
-			options 
-		);
-		jQuery('.fulldcreen_zoom').click(function(){
+		instance = PhotoSwipe.attach(flscreenimages, options);
+		jQuery('.fulldcreen_zoom').click(function() {
 			var id = $(this).attr('id').substr(4);
-			instance.show(parseInt(id));		
+			instance.show(parseInt(id, 10));
 		});
 	}(window, window.Code.PhotoSwipe));
 	$('#audioinfo').html(window.localStorage.getItem("audio0"));
 	$('#desc').html(window.localStorage.getItem("scripttext0"));
 	var audname = window.localStorage.getItem("audio0");
 	audname = audname.substring(0, audname.length - 4);
-	$('<source id="typemp3" src="http://mosh.kaldim.com/pages/mp3s/' + audname + '.mp3"><source id="typewav" src="http://moshapp.kaldim.com/pages/wavs/' + audname + '.wav">').appendTo('#moshplayer');
+	loadAudio(audname);
 	var slider = new Swipe(document.getElementById('imgslider'), {
 		callback: function(e, pos) {
 			var i = bullets.length;
@@ -802,10 +863,10 @@ $('#page-download').live('pageinit', function() {
 			$('#desc').html(window.localStorage.getItem(("scripttext") + pos));
 			audname = window.localStorage.getItem(("audio" + pos));
 			audname = audname.substring(0, audname.length - 4);
-			$('#moshplayer')[0].pause();
-			$('#typemp3').attr('src', 'http://mosh.kaldim.com/pages/mp3s/' + audname + '.mp3');
-			$('#typewav').attr('src', 'http://mosh.kaldim.com/pages/wavs/' + audname + '.wav');
-			$('#stop').trigger('click');
+			  if(playing){
+				  stopAudio();
+			  }
+			  loadAudio(audname);
 		}
 	}),
 		bullets = document.getElementById('position').getElementsByTagName('em');
@@ -825,35 +886,14 @@ $('#page-download').live('pageinit', function() {
 		else $('#position').append('<em>&bull;</em>');
 	}
 
-	var play_btn = $('#play');
-	var stop_btn = $('#stop');
-
-	play_btn.click(function() {
-		if ($('#play .ui-btn-text').html() == 'Play') {
-			$('#moshplayer')[0].play();
-			$('#slider').attr('max', Math.round($('#moshplayer')[0].duration));
-			$('#slider').slider('refresh');
-			$('#play .ui-btn-text').html('Pause');
-			$('#play .ui-icon').addClass('ui-icon-audio-pause').removeClass('ui-icon-audio-play');
-		} else {
-			$('#moshplayer')[0].pause();
-			$('#play .ui-btn-text').html('Play');
-			$('#play .ui-icon').addClass('ui-icon-audio-play').removeClass('ui-icon-audio-pause');
-		}
-	});
-
-	stop_btn.click(function() {
-		$('#moshplayer')[0].load();
-		$('#play .ui-btn-text').html('Play');
-		$('#play .ui-icon').addClass('ui-icon-audio-play').removeClass('ui-icon-audio-pause');
-		$('#slider').val(0);
-		$('#slider').slider('refresh');
-	});
 }).live('pagehide', function(e) {
 	slider = "";
-	$('#stop').trigger('click');
 	$('#imgul').empty();
 	$('#position').empty();
+	  if(playing){
+		  stopAudio();
+	  }
+	  audio=null;
 });
 
 function updateslider() {
@@ -871,72 +911,74 @@ $('#page-teamsList').live('pageshow', function(event) {
 });
 
 function getTeamsList() {
-	$.post(servicelink, "tag=teams").done(function(data, textStatus, jqXHR) {
-		data = $.parseJSON(data);
-		$('#teamsList').empty();
-		$.each(data['teams'], function(entryIndex, entry) {
-			var html = '<li id="tms' + entryIndex + '" data-icon="arrow-r" data-iconpos="right"></li>';
-			$('#teamsList').append(html);
-			var tmbtn = $('<a href="#page-teammemberdetail"><img src="img/teams.png"><h4>' + entry['tname'] + '</h4><p>Time spent ' + toHHMMSS(entry['time_spent']) + ' sec</p><span class="ui-li-count">Rank ' + (entryIndex + 1) + '</span></a>');
-			tmbtn.bind('click', function() {
-				window.localStorage.setItem('tmsprm', entry['id']);
+	$.ajax({
+		type: 'GET',
+		url: servicelink2 + '/teams',
+		complete: function(data) {
+			data = $.parseJSON(data.responseText);
+			$('#teamsList').empty();
+			$.each(data['teams'], function(entryIndex, entry) {
+				var html = '<li id="tms' + entryIndex + '" data-icon="arrow-r" data-iconpos="right"></li>';
+				$('#teamsList').append(html);
+				var tmbtn = $('<a href="#page-teammemberdetail"><img src="img/teams.png"><h4>' + entry['tname'] + '</h4><p>Time spent ' + toHHMMSS(entry['time_spent']) + '</p><span class="ui-li-count">Rank ' + (entryIndex + 1) + '</span></a>');
+				tmbtn.bind('click', function() {
+					window.localStorage.setItem('tmsprm', entry['id']);
+				});
+				$('#tms' + entryIndex).append(tmbtn);
+				$('#teamsList').listview('refresh');
 			});
-			$('#tms' + entryIndex).append(tmbtn);
-			$('#teamsList').listview('refresh');
-		});
+		}
 	});
 }
 
 //on leaderboard when they select team they will redirected to this page where they will see all members of that team information
 $('#page-teammemberdetail').live('pageshow', function(event) {
-	$.post(servicelink, "tag=teammembers&t_id=" + window.localStorage.getItem('tmsprm')).done(function(data, textStatus, jqXHR) {
-		data = $.parseJSON(data);
-		$('#teamMembers').empty();
-		$('#teamMembers').append('<h1  align="center">' + data['tname'] + '</h1>');
-		$.each(data['teammembers'], function(entryIndex, entry) {
-			var html = '<li id="mmbs' + entryIndex + '" data-icon="arrow-r" data-iconpos="right"></li>';
-			$('#teamMembers').append(html);
-			var mmberbtn = $('<a href="#page-usertaskdetail?id=' + entry['id'] + '"><img src="css/img/ic_action_user.png"><h4>' + entry['nickname'] + '</h4><p>Time spent ' + toHHMMSS(entry['time_spent']) + ' sec</p></a>');
-			mmberbtn.bind('click', function() {
-				window.localStorage.setItem('tmsmmbrprm', entry['id']);
+	$.ajax({
+		type: 'GET',
+		url: servicelink2 + '/teams/' + window.localStorage.getItem('tmsprm') + '/members',
+		complete: function(data) {
+			data = $.parseJSON(data.responseText);
+			$('#teamMembers').empty();
+			$('#teamMembers').append('<h1  align="center">' + data['tname'] + '</h1>');
+			$.each(data['teammembers'], function(entryIndex, entry) {
+				var html = '<li id="mmbs' + entryIndex + '" data-icon="arrow-r" data-iconpos="right"></li>';
+				$('#teamMembers').append(html);
+				var mmberbtn = $('<a href="#page-usertaskdetail?id=' + entry['id'] + '"><img src="css/img/ic_action_user.png"><h4>' + entry['nickname'] + '</h4><p>Time spent ' + toHHMMSS(entry['time_spent']) + '</p></a>');
+				mmberbtn.bind('click', function() {
+					window.localStorage.setItem('tmsmmbrprm', entry['id']);
+				});
+				$('#mmbs' + entryIndex).append(mmberbtn);
+				$('#teamMembers').listview('refresh');
 			});
-			$('#mmbs' + entryIndex).append(mmberbtn);
-			$('#teamMembers').listview('refresh');
-		});
+		}
 	});
 });
 
 //leaderboard on selection of team member this page is loaded and shows selected users progress, task list and if they have done any task
 $('#page-usertaskdetail').live('pageshow', function(event) {
-	$.post(servicelink, "tag=teammemberdetails&u_id=" + window.localStorage.getItem('tmsmmbrprm')).done(function(data, textStatus, jqXHR) {
-		data = $.parseJSON(data);
-		$('#userDetails').empty();
-		$('.member-summary h1').html(data['nickname']);
-		$('#secondinfo').html(data['tname'] + ' Team Member');
-		$.each(data['tasks'], function(entryIndex, entry) {
-			var html = '<li><a href="#"><img src="css/img/ic_action_' + entry['taskstatus'] + '.png"><h4>' + entry['taskname'] + '</h4><p>Time spent ' + toHHMMSS(entry['time_spent']) + ' sec</p></a></li>';
-			$('#userDetails').append(html).listview('refresh');
-		});
+	$.ajax({
+		type: 'GET',
+		url: servicelink2 + '/users/' + window.localStorage.getItem('tmsmmbrprm') + '/taskdetails',
+		complete: function(data) {
+			data = $.parseJSON(data.responseText);
+			$('#userDetails').empty();
+			$('.member-summary h1').html(data['nickname']);
+			$('#secondinfo').html(data['tname'] + ' Team Member');
+			$.each(data['tasks'], function(entryIndex, entry) {
+				var html = '<li><a href="#"><img src="css/img/ic_action_' + entry['taskstatus'] + '.png"><h4>' + entry['taskname'] + '</h4><p>Time spent ' + toHHMMSS(entry['time_spent']) + '</p></a></li>';
+				$('#userDetails').append(html).listview('refresh');
+			});
+		}
 	});
 });
 
 function toHHMMSS(sec) {
-	var sec_numb = parseInt(sec, 10);
-	var hours = Math.floor(sec_numb / 3600);
-	var minutes = Math.floor((sec_numb - (hours * 3600)) / 60);
-	var seconds = sec_numb - (hours * 3600) - (minutes * 60);
+	var hours = parseInt(sec / 3600, 10) % 24;
+	var minutes = parseInt(sec / 60, 10) % 60;
+	var seconds = sec % 60;
 
-	if (hours < 10) {
-		hours = "0" + hours;
-	}
-	if (minutes < 10) {
-		minutes = "0" + minutes;
-	}
-	if (seconds < 10) {
-		seconds = "0" + seconds;
-	}
-	var time = hours + ':' + minutes + ':' + seconds;
-	return time;
+	var result = (hours < 10 ? "0" + hours : hours) + ":" + (minutes < 10 ? "0" + minutes : minutes) + ":" + (seconds < 10 ? "0" + seconds : seconds);
+	return result;
 }
 
 //any error or notification are sent to this function which will be overlay to screen and shows message
