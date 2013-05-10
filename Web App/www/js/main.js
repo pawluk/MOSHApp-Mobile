@@ -46,7 +46,25 @@ function DeviceReady() {
 
 //if a user who hasn't logged in tries to go another page don't let him see that page.
 function isCheater() {
-	if (!window.localStorage.getItem("sid")) $.mobile.changePage("#page-main");
+	if (!window.localStorage.getItem("sid")) {
+		// User is not logged in; go back to login page
+		$.mobile.changePage("#page-main");
+	} else {
+		// User is logged in; check if their session ID is still valid
+		var valid = $.get(servicelink2 + '/authenticate/check?' + sessionQueryParams(), function(data) {
+			if(!(/^true$/i).test(data)) {
+				// if the above check fails, then the session ID is invalid
+				window.localStorage.removeItem("sid");
+				window.localStorage.clear();
+
+				fadingMsg("Your session has expired. Please log in again.");
+				setTimeout(function() {
+					window.localStorage.setItem("reload", "true");
+					$.mobile.changePage("#page-main");
+				}, 1400); // fadingMsg is on-screen for 1400 ms
+			}
+		});
+	}
 }
 
 //if user didn't select task but tries to change address and want to go question page directly don't allow him.
