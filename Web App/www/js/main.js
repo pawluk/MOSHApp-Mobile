@@ -526,36 +526,46 @@ function changeContent(pos) {
 
 //amswer question by sending required information to service.
 function answerQuestion(answer, questionid, locationofquestion) {
-	$.post(servicelink, "tag=adresponse&u_id=" + window.localStorage.getItem("sid") + "&t_id=" + window.localStorage.getItem("teamid") + "&tsk_id=" + window.localStorage.getItem("taskid") + "&q_id=" + questionid + "&response=" + answer + "&location=").done(function(data, textStatus, jqXHR) {
-		data = $.parseJSON(data);
-		if (data.success == 1) {
-			//if all question are solved this call return new userinfo based of that user info we are sending user to main page and refresing all information, so they will be able to choose new task available
-			if (data.hasOwnProperty('userinfo')) {
-				//fadingMsg('<div align=center><strong>Congratulations!</strong><br/>You have solved all question on this task, Now you can go and select another task.</div>','#EB88A9','#88EBE4',5000);
-				// var userid=window.localStorage.getItem("sid"),nickname=window.localStorage.getItem("nickname");
-				// window.localStorage.clear();
-				// saveuser(userid,nickname);
-				// saveuserInfo(data.userinfo);
-				removeTaskData();
-				window.localStorage.setItem("reload", "true"); //,reloadPage:true
-				$.mobile.changePage("#page-main");
-			} else if (data.hasOwnProperty('gamecomplete')) {
-				removeTaskData();
-				window.localStorage.setItem("gamfinished", "true"); //,reloadPage:true
-				$.mobile.changePage("#page-main");
+	$.ajax({
+		type: 'POST',
+		url: servicelink2 + '/games/' + window.localStorage.getItem("gameid") + '/checkin?' + sessionQueryParams(),
+		data: {
+			taskId: window.localStorage.getItem("taskid"),
+			questionId: questionid,
+			response: answer,
+			location: ""
+		},
+		complete: function(data) {
+			data = $.parseJSON(data.responseText);
+			if (data.success == 1) {
+				//if all question are solved this call return new userinfo based of that user info we are sending user to main page and refresing all information, so they will be able to choose new task available
+				if (data.hasOwnProperty('userinfo')) {
+					//fadingMsg('<div align=center><strong>Congratulations!</strong><br/>You have solved all question on this task, Now you can go and select another task.</div>','#EB88A9','#88EBE4',5000);
+					// var userid=window.localStorage.getItem("sid"),nickname=window.localStorage.getItem("nickname");
+					// window.localStorage.clear();
+					// saveuser(userid,nickname);
+					// saveuserInfo(data.userinfo);
+					removeTaskData();
+					window.localStorage.setItem("reload", "true"); //,reloadPage:true
+					$.mobile.changePage("#page-main");
+				} else if (data.hasOwnProperty('gamecomplete')) {
+					removeTaskData();
+					window.localStorage.setItem("gamfinished", "true"); //,reloadPage:true
+					$.mobile.changePage("#page-main");
+				} else {
+					//if question is answered and answer were correct change status of question in localstorage and save answer for it to use it later
+					$('#multichoiceq').empty();
+					window.localStorage.setItem("questionstatus" + locationofquestion, data.success);
+					window.localStorage.setItem("questionanswer" + locationofquestion, answer);
+					changeContent(locationofquestion);
+					if (locationofquestion != numberofimages) $('#qnext').trigger('click');
+					fadingMsg('<div align=center><strong>Congratulations!</strong><br/>Correct answer.</div>', '#EB88A9', '#88EBE4');
+				}
 			} else {
-				//if question is answered and answer were correct change status of question in localstorage and save answer for it to use it later
-				$('#multichoiceq').empty();
-				window.localStorage.setItem("questionstatus" + locationofquestion, data.success);
-				window.localStorage.setItem("questionanswer" + locationofquestion, answer);
-				changeContent(locationofquestion);
-				if (locationofquestion != numberofimages) $('#qnext').trigger('click');
-				fadingMsg('<div align=center><strong>Congratulations!</strong><br/>Correct answer.</div>', '#EB88A9', '#88EBE4');
+				//if somehow there were mistake and they passed same value for same question database restriction will not accept it and will return 'answered' so we can wanr user with this info
+				if (data.hasOwnProperty('answered')) fadingMsg(data.error_msg);
+				else fadingMsg("Wrong Answer!");
 			}
-		} else {
-			//if somehow there were mistake and they passed same value for same question database restriction will not accept it and will return 'answered' so we can wanr user with this info
-			if (data.hasOwnProperty('answered')) fadingMsg(data.error_msg);
-			else fadingMsg("Wrong Answer!");
 		}
 	});
 }
