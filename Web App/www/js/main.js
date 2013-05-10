@@ -731,7 +731,7 @@ function getTaskList() {
 				var html = '<li data-theme="' + color + '" id="tsk' + entryIndex + '"></li>';
 				$('#taskList').append(html);
 				$('#tsk' + entryIndex).append(btn);
-				var info = '<img src="css/img/ic_action_' + entry['status'] + '.png"><h4>' + entry['taskname'] + '</h4><p>Required Task: ' + entry['requiredtsk'] + '&emsp;' + progressinfo + '</p>';
+				var info = '<img src="css/img/ic_action_' + entry['status'] + '.png"><h4>' + entry['taskname'] + '</h4><p>Required Task: ' + entry['requiredtsk'] + ' - ' + progressinfo + '</p>';
 				if (entry['user']) info += '<p>User : ' + entry['user'] + '</p>';
 				$('#tsk_' + entry['taskid']).append(info);
 				$('#taskList').listview('refresh');
