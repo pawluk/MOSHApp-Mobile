@@ -495,6 +495,7 @@ function changeContent(pos) {
 	var solved = "notsolved";
 	if (window.localStorage.getItem(("questionstatus" + pos)) == 1) solved = "solved";
 	if (window.localStorage.getItem(("questiontype" + pos)) == 2) {
+		$('#multichoiceq').empty();
 		var aa = result.split("~&~");
 		var question = aa[0];
 		var options = aa[1].split("~");
