@@ -252,7 +252,7 @@ $(document).ajaxStop(function() {
 		<div data-role="content" data-theme="c">
 			<div class="scandata">
 				<p>
-					Task Status: <span id="taskstatus">On Progress</span><br />
+					Task Status: <span id="taskstatus">In Progress</span><br />
 					Task Name: <span class="smalltxt" id="taskname"></span><br />
 					Location: <span class="smalltxt" id="campusname"></span><br />
 					Question: <span class="smalltxt" id="question"></span>&nbsp;&nbsp;&nbsp;&nbsp;Solved: <span class="smalltxt" id="solved"></span>
@@ -569,7 +569,7 @@ $(document).ajaxStop(function() {
 			</div>
         <!-- Main Task Page Content -->
 		<div data-role="content">
-			<button id="goquestions" data-icon="star" data-theme="c">Found Key</button>
+			<button id="goquestions" data-icon="star" data-theme="c">Enter QR Code</button>
 				<div data-role="collapsible" class="allcollapse" id="devmenu-help"
 					data-content-theme="c">
                     <h3>Read</h3>
@@ -631,8 +631,7 @@ $(document).ajaxStop(function() {
 					</p>
 				</div>
 				<br/>
-				<label>Enter ID:</label>
-				<input id="questionid" type="text" placeholder="Enter ID that you found here:" data-clear-btn="true"/>
+				<input id="questionid" type="text" placeholder="Enter QR Code" data-clear-btn="true"/>
 				<a id="get_question" data-icon="grid" data-role="button">Get Question</a>
 			</div>
             <!-- End QRCode/Web Code Content -->
@@ -709,7 +708,7 @@ $(document).ajaxStop(function() {
 				</ul>
 				<ul>
 					<li><a href="#page-main" data-direction="reverse" data-transition="slide" data-icon="back" data-role="button">Back</a></li>
-					<li><a data-role="button" data-icon="star" data-theme="a" id="answer_btn">Answer</a></li>
+					<li><a data-role="button" data-icon="star" data-theme="a" id="answer_btn">Send Answer</a></li>
 				</ul>
 			</div>
 		</div>

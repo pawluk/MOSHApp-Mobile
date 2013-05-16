@@ -163,7 +163,7 @@ $('#page-main').live('pageinit', function() {
 				window.location.reload(true);
 			} else {
 				$('#mainnavbar').hide();
-				confirmDialog("Congratulations", "You have solved all questions on this task, now you can go and select another task.", "#page-main");
+				confirmDialog("Great Job!", "You have solved all questions on this task, now you can go and select another task.", "#page-main");
 			}
 		} else {
 			window.localStorage.removeItem("reload");
@@ -172,7 +172,7 @@ $('#page-main').live('pageinit', function() {
 	} else if (window.localStorage.getItem("gamfinished")) {
 		window.localStorage.removeItem("gamfinished");
 		$('#mainnavbar').hide();
-		confirmDialog("Congratulations", "You have finished all tasks that are assigned! Now you know some useful services.", "#page-main");
+		confirmDialog("Great Job!", "You have finished all tasks that are assigned! Now you know some useful services.", "#page-main");
 	}
 	//adds main page user info like team name and if they have task
 	ShowUserInfo();
@@ -558,7 +558,7 @@ function answerQuestion(answer, questionid, locationofquestion) {
 			if (data.success == 1) {
 				//if all question are solved this call return new userinfo based of that user info we are sending user to main page and refresing all information, so they will be able to choose new task available
 				if (data.hasOwnProperty('userinfo')) {
-					//fadingMsg('<div align=center><strong>Congratulations!</strong><br/>You have solved all question on this task, Now you can go and select another task.</div>','#EB88A9','#88EBE4',5000);
+					//fadingMsg('<div align=center><strong>Great Job!</strong><br/>You have solved all question on this task, Now you can go and select another task.</div>','#EB88A9','#88EBE4',5000);
 					// var userid=window.localStorage.getItem("sid"),nickname=window.localStorage.getItem("nickname");
 					// window.localStorage.clear();
 					// saveuser(userid,nickname);
@@ -577,7 +577,7 @@ function answerQuestion(answer, questionid, locationofquestion) {
 					window.localStorage.setItem("questionanswer" + locationofquestion, answer);
 					changeContent(locationofquestion);
 					if (locationofquestion != numberofimages) $('#qnext').trigger('click');
-					fadingMsg('<div align=center><strong>Congratulations!</strong><br/>Correct answer.</div>', '#EB88A9', '#88EBE4');
+					fadingMsg('<div align=center><strong>Great Job!</strong><br/>Correct answer.</div>', '#EB88A9', '#88EBE4');
 				}
 			} else {
 				//if somehow there were mistake and they passed same value for same question database restriction will not accept it and will return 'answered' so we can wanr user with this info
